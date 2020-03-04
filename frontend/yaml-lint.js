@@ -1,10 +1,17 @@
-yaml = require('js-yaml');
-fs   = require('fs');
+const yaml = require('yaml-validator')
+
+// Default options
+const options = {
+  log: false,
+  structure: false,
+  onWarning: null,
+  writeJson: false
+};
  
-// Get document, or throw exception on error
-try {
-  var doc = yaml.safeLoad(fs.readFileSync('./procedures/procedures_EVA1.yml', 'utf8'));
-  console.log(doc);
-} catch (e) {
-  console.log(e);
-}
+const files = [
+  './procedures/procedures_EVA1.yml'
+];
+ 
+const validator = new yaml(options);
+validator.validate(files);
+validator.report();
