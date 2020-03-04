@@ -1,0 +1,42 @@
+{
+  "name": "Ground Control",
+  "steps": [
+    {
+      "name": "1",
+      "title": "Control is not convinced",
+      "text": [ "But the computer has the evidence", "No need to abort", "reference diagram 1 and 2" ]
+    },
+    {
+      "name": "2",
+      "title": "The countdown starts",
+      "text": [ "Nothing left to chance, all is working", "Trying to relax, up in the capsule", "The count goes on" ],
+      "alert": "4,3,2,1"
+    },
+    {
+      "name": "3",
+      "title": "Back at ground control, there is a problem",
+      "text": [ "Go to rockets full, not responding", "Hello Major Tom, are you receiving", "Turn the thrusters on, we're standing by", "Theres no reply" ],
+      "danger": "problem"
+    },
+    {
+      "name": "4",
+      "title": "Far beneath the ship, the world is mourning",
+      "text": [ "They don't realize, he's alive" ]
+    }
+
+  ],
+  "diagrams": [
+    {
+      "name": "1",
+      "url": "http://placekitten.com/300/300"
+    },
+    {
+      "name": "2",
+      "url": "http://placekitten.com/450/300"
+    },
+    {
+      "name": "3",
+      "url": "http://placekitten.com/450/300"
+    }
+  ]
+}

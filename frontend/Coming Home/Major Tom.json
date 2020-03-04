@@ -1,0 +1,54 @@
+{
+  "name": "Major Tom",
+  "steps": [
+    {
+      "name": "1",
+      "title": "Standing there alone, the ship is waiting",
+      "text": [ "All systems are go, are you sure?" ]
+    },
+    {
+      "name": "2",
+      "title": "The countdown starts",
+      "text": [ "Watching in a trance, the crew is certain", "\"Send me up a drink\", jokes Major Tom" ]
+    },
+    {
+      "name": "3",
+      "title": "4,3,2,1",
+      "text": [ "Earth below us", "Drifting falling", "Floating weightless", "reference diagram 3 & 4" ],
+      "alert": "4,3,2,1"
+    },
+    {
+      "name": "4",
+      "title": "Second stage is cut, we're now in orbit",
+      "text": [ "Stabilizers up, running perfect", "Starting to collect, requested data", "\"What will it effect, when all is done\",Thinks Major Tom ", "reference diagram 4 " ]
+    },
+    {
+      "name": "5",
+      "title": "4,3,2,1",
+      "text": [ "Earth below us", "Drifting falling", "Floating weightless", "Calling home", "reference diagram 3" ]
+    },
+    {
+      "name": "6",
+      "title": "Across the stratosphere",
+      "text": [ "A final message, \"Give my wife my love\"", "Then nothing more" ]
+    },
+    {
+      "name": "7",
+      "title": "Now the light commands, this is my home",
+      "text": [ "I'm coming home" ]
+    }
+
+
+  ],
+  "diagrams": [
+    {
+      "name": "3",
+      "url": "http://placekitten.com/600/600"
+    },
+    {
+      "name": "4",
+      "url": "http://placekitten.com/400/650"
+    }
+  ]
+
+}
