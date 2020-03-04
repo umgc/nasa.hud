@@ -1,0 +1,126 @@
+title: EGRESS/SETUP
+roles:
+  - name: crewA
+    duration:
+      minutes: 45
+    description: 'Crewmember exiting A/L first, in charge of operating hatch'
+  - name: crewB
+    duration:
+      minutes: 45
+    description: 'Crewmember exiting A/L second, in charge of operating UIA'
+steps:
+  - IV + crewA + crewB:
+      - images:
+          - path: new-st-config.png
+  - simo:
+      IV:
+        - text: 'Record PET start time ____:____ (Pwr to Batt)'
+        - text: Start WVS Recorders
+      crewA:
+        - title: Initial Configuration
+          text: '{{CHECK}} All gates closed & hooks locked'
+          checkboxes:
+            - '{{CHECK}} R Waist Tether to EV3 Blank hook'
+            - '{{CHECK}} Red hook on L D-ring ext'
+            - '{{CHECK}} Yellow hook on Green ERCM'
+            - '{{CHECK}} Green hook on Red ERCM'
+            - '{{CHECK}} Blank hook on MWS'
+          duration:
+            minutes: 5
+      crewB:
+        - title: Initial Configuration
+          text: '{{CHECK}} All gates closed & hooks locked'
+          checkboxes:
+            - '{{CHECK}} All gates closed & hooks locked'
+            - '{{CHECK}} R Waist Tether to A/L D-ring ext'
+            - '{{CHECK}} Red hook on L D-ring ext'
+            - '{{CHECK}} Yellow hook on Green ERCM'
+            - '{{CHECK}} Green hook on Red ERCM'
+            - '{{CHECK}} Blank hook to EV1 R Waist Tether'
+          duration:
+            minutes: 5
+  - crewA + crewB:
+      - text: this is a crewA and crewB step for demonstration of Maestro only
+  - simo:
+      crewA:
+        - title: 'EGRESS/SETUP (00:25)'
+          text: Open hatch thermal cover
+        - text: Egress A/L
+      IV:
+        - text: 'Start Hatch thermal cover clock PET (30 min) ____:____'
+  - simo:
+      crewA:
+        - text: 'Receive EWC ORU bag from EV3, stow on BRT w/RET'
+      crewB:
+        - text: Transfer EWC ORU Bag to EV1
+          checkboxes: Position CETA ORU bag near hatch
+        - text: This is a step
+  - simo:
+      crewB:
+        - text: Perform buddy checks
+          checkboxes:
+            - MWS tabs up
+            - BRT tab up
+            - tether configs
+        - text: Verify SAFER config
+          checkboxes:
+            - '{{CHECK}}L handle down (MAN ISOL Vlv - Open)'
+            - '{{CHECK}}R handle down (HCM - Closed)'
+        - text: '{{CHECK}}WVS - Green LED'
+      IV:
+        - text: 'Post crew egress, WVS Software:'
+          substeps:
+            - text: select page - RF camera.
+            - text: Sel 'Advanced Controls'
+            - text: S-Band Level (two) - Max
+  - simo:
+      crewA:
+        - text: Perform buddy checks
+          checkboxes:
+            - MWS tabs up
+            - BRT tab up
+            - tether configs
+        - text: Verify SAFER config
+          checkboxes:
+            - '{{CHECK}}L handle down (MAN ISOL Vlv - Open)'
+            - '{{CHECK}}R handle down (HCM - Closed)'
+        - text: '{{CHECK}}WVS - Green LED'
+      crewB:
+        - text: Perform buddy checks
+          checkboxes:
+            - MWS tabs up
+            - BRT tab up
+            - tether configs
+        - text: Verify SAFER config
+          checkboxes:
+            - '{{CHECK}}L handle down (MAN ISOL Vlv - Open)'
+            - '{{CHECK}}R handle down (HCM - Closed)'
+        - text: '{{CHECK}}WVS - Green LED'
+  - simo:
+      crewA:
+        - text: Translate to S0 Port Struts
+        - text: Attach EV1 **BLANK** hook to port-outboard strut
+          checkboxes: '{{CHECK}} Gat closed, hook locked, reels unlocked, release RET'
+        - text: Attach EV3 **BLANK** hook to port-inboard strut
+          checkboxes: '{{CHECK}} Gate closed, hook locked'
+        - text: Release EV1 R Waist Tether from EV3 **BLANK** hook
+      crewB:
+        - text: 'Retrieve CETA ORU bag, stow on BRT with RET'
+  - simo:
+      crewA:
+        - text: Give **EV3 GO** to release Waist Tether
+      crewB:
+        - text: >-
+            On **EV1 GO**, EV3 release right Waist Tether from Airlock internal
+            D-Ring
+  - simo:
+      crewA:
+        - text: Translate forward along Lab.
+        - text: 'Stow EWC ORU bag on Lab HR 0260, 0259 with hinge ISS aft'
+        - text: 'Translate to S1 Face 1, zenith - MISSE 7 Retrieve'
+      crewB:
+        - text: Close hatch thermal cover
+        - text: Perform translation adaptation
+        - text: 'Translate to S1 Face 1, nadir - MISSE 7 Retrieve'
+  - IV:
+      - text: 'Stop Hatch Thermal Cover clock PET (30 min) ____:____'

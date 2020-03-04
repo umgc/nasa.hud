@@ -3,7 +3,7 @@ fs   = require('fs');
  
 // Get document, or throw exception on error
 try {
-  var doc = yaml.safeLoad(fs.readFileSync('./procedures_EVA1.yml', 'utf8'));
+  var doc = yaml.safeLoad(fs.readFileSync('./procedures/procedures_EVA1.yml', 'utf8'));
   console.log(doc);
 } catch (e) {
   console.log(e);
