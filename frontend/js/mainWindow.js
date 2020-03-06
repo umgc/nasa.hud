@@ -1,5 +1,3 @@
-
-
 var mainWindow = {
 
     steps: [],
@@ -29,7 +27,7 @@ var mainWindow = {
 
 
         var html = '<div class="container">';
-        html += '<div class="card" style="width: 18rem;">';
+        html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Procedure Select</h5>';
         html += ' <p class="card-text">Please select a procedure to continue</p >';
@@ -57,7 +55,7 @@ var mainWindow = {
 
         console.log(currentProcedure);
         var html = '<div class="container">';
-        html += '<div class="card" style="width: 18rem;">';
+        html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Role Select</h5>';
         html += ' <p class="card-text">Please select a role to continue</p >';
@@ -124,10 +122,11 @@ var mainWindow = {
         var html = '<div class="container">';
         html += '<div class="row">';
         html += '<div class="col-sm">';
-        html += '<div class="card" style="width: 18rem;">'
+        html += '<div class="card" style="width:100%;">';
+        html += '<img src="' + diagramData.url + '" class="card-img-top" alt="...">'
 
         html += '<div class="card-body">';
-        html += '<h5 class="card-title">Diagram goes Here!</h5 >';
+        //html += '<h5 class="card-title">Diagram goes Here!</h5 >';
         html += mainWindow.slideInBackToStep();
         html += '</div>';
         html += '</div>';
@@ -140,18 +139,23 @@ var mainWindow = {
     slideInBackToStep: function () {
         var html = "</div>";
         html += '<div class="card-body">';
-        html += "<button type='button' class='btn btn-primary' onclick=\"displayStep('" + mainWindow.currentStepName + "')\" > Back to Step</button > ";
+
+        html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.displayStep('" + mainWindow.currentStepName + "')\" > Back to Step</button > ";
         html += "</div>";
         html += '<div class="card-body">';
         return html; 
     },
 
-    slideInJumpBoxes: function () {
+    slideInJumpBoxes: function (stepData) {
 
         var html = "</div>";
         html += '<div class="card-body">';
 
         //jump to step
+        html += '<div class="btn-group" role="group">';
+        if (stepData.previousStepName !== undefined)
+            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.previousStep()\" >Prev Step</button > ";
+
         html += '<div class="dropdown ">';
         html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         html += 'Jump to Step';
@@ -170,12 +174,22 @@ var mainWindow = {
         html += 'Jump to Diagram';
         html += '</button>';
         html += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        html += mainWindow.steps.reduce(function (output, item) {
+        html += mainWindow.diagrams.reduce(function (output, item) {
             return output += '<a class="dropdown-item" onClick=\"mainWindow.displayDiagram(\'' + item['name'] + '\')\" >' + item['name'] + '</a>';
         }, "");
 
         html += '</div>';
         html += '</div>';
+
+        if (stepData.nextStepName !== undefined)
+            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.nextStep()\" >Next Step</button > ";
+
+        html += '</div>';
+        html += '</div>';
+
+        html += '<div class="card-body">';
+
+
         
 
         return html;
@@ -226,7 +240,7 @@ var mainWindow = {
         var html = '<div class="container">';
         html += '<div class="row">';
         html += '<div class="col-sm">';
-        html += '<div class="card" style="width: 18rem;">';
+        html += '<div class="card">';
 
         if (stepData.alert !== undefined) {
             html += '<div class="card-header alert-danger">';
@@ -245,7 +259,7 @@ var mainWindow = {
 
 
         html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
-        html +=  mainWindow.slideInJumpBoxes();
+        html += mainWindow.slideInJumpBoxes(stepData);
         html += '</div>';
         html += '</div>';
         html += '</div>';
