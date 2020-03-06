@@ -12,7 +12,7 @@ app.get("/lint", function(req, res) {
     }
     catch(e)
     {
-        response = "Invalid procedure file! Please verify contents and format.";
+        response = "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct.";
         console.log(e);
     }
     res.json(response);
