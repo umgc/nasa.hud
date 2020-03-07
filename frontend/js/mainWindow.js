@@ -156,6 +156,7 @@ var mainWindow = {
         if (stepData.previousStepName !== undefined)
             html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.previousStep()\" >Prev Step</button > ";
 
+        /*
         html += '<div class="dropdown ">';
         html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
         html += 'Jump to Step';
@@ -166,7 +167,7 @@ var mainWindow = {
         }, "");
 
         html += '</div>';
-        html += '</div>';
+        html += '</div>'; */
 
         //jump to diagram
         html += '<div class="dropdown ">';
