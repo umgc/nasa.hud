@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var wiki = require('./wiki.js');
+var wiki = require('./controllers/wiki.js');
 
 app.use('/hud', wiki);
 
