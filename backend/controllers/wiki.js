@@ -16,6 +16,7 @@ router.get('/getfiles', function(req, res) {
     res.send(response);
 })
 
+// Returns
 router.get("/lint/:filename", function(req, res) {
     var response;
     try {
@@ -37,6 +38,7 @@ router.get("/lint/:filename", function(req, res) {
     res.json(response);
    })
 
+// Returns a list of all actors for a given procedure
 router.get("/roles/:filename", function(req, res) {
     var roles = [];
     const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
@@ -46,6 +48,7 @@ router.get("/roles/:filename", function(req, res) {
     res.json(roles);
 })
 
+// WIP: Returns a list of steps for a given procedure and role
 router.get("/tasks/:filename/:role", function(req, res) {
     var tasks = [];
     const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
