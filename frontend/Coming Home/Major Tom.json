@@ -4,7 +4,8 @@
     {
       "name": "1",
       "title": "Standing there alone, the ship is waiting",
-      "text": [ "All systems are go, are you sure?" ]
+      "text": [ "All systems are go, are you sure?" ],
+      "checkboxes" :  ["All Systems go?","Confirmed?"]
     },
     {
       "name": "2",
@@ -15,7 +16,8 @@
       "name": "3",
       "title": "4,3,2,1",
       "text": [ "Earth below us", "Drifting falling", "Floating weightless", "reference diagram 3 & 4" ],
-      "alert": "4,3,2,1"
+      "alert": "4,3,2,1",
+      "checkboxes": [ "4", "3", "2", "1" ]
     },
     {
       "name": "4",
@@ -30,7 +32,8 @@
     {
       "name": "6",
       "title": "Across the stratosphere",
-      "text": [ "A final message, \"Give my wife my love\"", "Then nothing more" ]
+      "text": [ "A final message, \"Give my wife my love\"", "Then nothing more" ],
+      "checkboxes":  ["Sent message"]
     },
     {
       "name": "7",

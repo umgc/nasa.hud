@@ -10,13 +10,14 @@
       "name": "2",
       "title": "The countdown starts",
       "text": [ "Nothing left to chance, all is working", "Trying to relax, up in the capsule", "The count goes on" ],
-      "alert": "4,3,2,1"
+      "checkboxes" :  ["4","3","2","1"]
     },
     {
       "name": "3",
       "title": "Back at ground control, there is a problem",
       "text": [ "Go to rockets full, not responding", "Hello Major Tom, are you receiving", "Turn the thrusters on, we're standing by", "Theres no reply" ],
-      "danger": "problem"
+      "danger": "problem",
+      "checkboxes" :  ["Confirmed if they are receiving?"]
     },
     {
       "name": "4",

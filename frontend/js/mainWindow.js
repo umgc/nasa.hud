@@ -21,6 +21,10 @@ var mainWindow = {
             });
 
         mainWindow.voiceControl = new anycontrol();
+        mainWindow.voiceControl.addCommand("next step", mainWindow.nextStep);
+        mainWindow.voiceControl.addCommand("previous step", mainWindow.previousStep);
+        mainWindow.voiceControl.addCommand("go home", mainWindow.selectProcedure);
+
     },
 
     selectProcedure: function () {
@@ -40,14 +44,14 @@ var mainWindow = {
         html += mainWindow.mission.reduce(function (output, item) {
             return output += '<a class="dropdown-item" onClick=\"mainWindow.selectRole(\'' + item['name'] + '\')\" >' + item['name'] + '</a>';
         }, "");
-            
+
         html += '</div>';
         html += '</div>';
 
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        $('#mainwindow').html(html); 
+        $('#mainwindow').html(html);
     },
 
     selectRole: function (procedureName) {
@@ -75,7 +79,7 @@ var mainWindow = {
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        $('#mainwindow').html(html); 
+        $('#mainwindow').html(html);
     },
 
     downloadSteps: function (procedureName, roleName) {
@@ -84,7 +88,7 @@ var mainWindow = {
 
         $.get(url)
             .fail(function (error) {
-
+                console.log(error);
                 alert("Could not download steps");
 
             })
@@ -108,7 +112,7 @@ var mainWindow = {
     },
 
 
-    getFromName : function(array, nameOfThing) {
+    getFromName: function (array, nameOfThing) {
         for (var i = 0; i < array.length; i++)
             if (array[i].name === nameOfThing)
                 return array[i];
@@ -133,7 +137,26 @@ var mainWindow = {
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        $('#mainwindow').html(html); 
+        $('#mainwindow').html(html);
+    },
+
+    slideInCheckboxes: function(stepData) {
+
+        if (stepData.checkboxes === undefined)
+            return "";
+        var html = "</div>";
+        html += '<div class="card-body">';
+        html += stepData.checkboxes.reduce(function (output, item, idx) {
+            var uid = stepData.stepNumber + '_' + idx;
+            output += '<div class="form-check">';
+            output += '<input type="checkbox" class="form-check-input" id="' + uid + '">';
+            output += '<label class="form-check-label" for="' + uid + '">' + item + '</label>';
+            output += '</div>';
+
+            return output;
+        }, "");
+
+        return html;
     },
 
     slideInBackToStep: function () {
@@ -184,6 +207,8 @@ var mainWindow = {
 
         if (stepData.nextStepName !== undefined)
             html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.nextStep()\" >Next Step</button > ";
+        else
+            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.displayFinalStep()\" >Complete</button > ";
 
         html += '</div>';
         html += '</div>';
@@ -202,6 +227,8 @@ var mainWindow = {
         for (var i = 0; i < steps.length; i++) {
             $.extend(steps[i], i === 0 ? undefined : { previousStepName: steps[i - 1].name });
             $.extend(steps[i], i + 1 === steps.length ? undefined : { nextStepName: steps[i + 1].name });
+            $.extend(steps[i], { stepNunmber : i });
+
         }
     },
 
@@ -243,15 +270,15 @@ var mainWindow = {
         html += '<div class="col-sm">';
         html += '<div class="card">';
 
-        if (stepData.alert !== undefined) {
+        if (stepData.danger !== undefined) {
             html += '<div class="card-header alert-danger">';
-            html += stepData.alert;
+            html += stepData.danger;
             html += '</div>';
         }
 
-        if (stepData.warning !== undefined) {
+        if (stepData.alert !== undefined) {
             html += '<div class="card-header alert-warning">';
-            html += stepData.warning;
+            html += stepData.alert;
             html += '</div>';
         }
 
@@ -260,6 +287,7 @@ var mainWindow = {
 
 
         html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
+        html += mainWindow.slideInCheckboxes(stepData);
         html += mainWindow.slideInJumpBoxes(stepData);
         html += '</div>';
         html += '</div>';
@@ -271,6 +299,24 @@ var mainWindow = {
 
     },
 
+    displayFinalStep: function () {
+
+
+        var html = '<div class="container">';
+        html += '<div class="row">';
+        html += '<div class="col-sm">';
+        html += '<div class="card">';
+        html += '<div class="card-body">';
+        html += '<h5 class="card-title">Procedure Complete</h5 >';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        $('#mainwindow').html(html); 
+        window.setTimeout(mainWindow.selectProcedure, 5000);
+    },
+
     keyhandler: function (event) {
         console.log(event);
 
@@ -279,7 +325,8 @@ var mainWindow = {
         else if (event.keyCode === 37)
             mainWindow.previousStep();
     }
-    
+
+
 
     /*
 
