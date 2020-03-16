@@ -16,6 +16,7 @@ router.get('/getfiles', function(req, res) {
     res.send(response);
 })
 
+// Returns
 router.get("/lint/:filename", function(req, res) {
     var response;
     try {
@@ -36,5 +37,37 @@ router.get("/lint/:filename", function(req, res) {
     }
     res.json(response);
    })
+
+// Returns a list of all actors for a given procedure
+router.get("/roles/:filename", function(req, res) {
+    var roles = [];
+    const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
+    for(const role of file.columns){
+        roles.push(role.key);
+    }
+    res.json(roles);
+})
+
+// WIP: Returns a list of steps for a given procedure and role
+router.get("/tasks/:filename/:role", function(req, res) {
+    var tasks = [];
+    const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
+    for(const obj of file.tasks) {
+        var role = obj.roles;
+        var keys = Object.keys(role);
+        for(var key of keys)
+        {
+            if(role[key] === req.params.role)
+            {
+                tasks.push(obj.file);
+                for(var task of tasks)
+                {
+                    // TODO: Add function to parse task files and pass loop through tasks array, passing each task file as a parameter
+                }
+            }
+        }
+    }
+    res.json(tasks);
+})
 
 module.exports = router;
