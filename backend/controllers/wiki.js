@@ -37,6 +37,7 @@ router.get("/lint/:filename", function(req, res) {
     res.json(response);
    })
 
+// Endpoint to return list of roles for a given procedure file
 router.get("/roles/:filename", function(req, res) {
     var roles = [];
     const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
@@ -46,6 +47,7 @@ router.get("/roles/:filename", function(req, res) {
     res.json(roles);
 })
 
+// Endpoint to return the parsed steps for each task in the specified procedure file, given a role
 router.get("/tasks/:filename/:role", function(req, res) {
     var tasks = [];
     const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
