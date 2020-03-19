@@ -3,8 +3,16 @@
     "version": "1.0.0",
     "description": "Backend code to serve up parsed procedure files.",
     "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "devstart": "nodemon app.js"
+    },
     "dependencies": {
         "express": "^4.17.1",
-        "js-yaml": "3.13.1"
+        "js-yaml": "3.13.1",
+        "mocha": "7.1.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
     }
 }

@@ -1,8 +1,10 @@
 var express = require("express");
-var app = express();
-var wiki = require('./controllers/wiki.js');
+var indexRouter = require('./routes/index');
 
-app.use('/hud', wiki);
+var app = express();
+
+// Set the routes
+app.use('/hud/api', indexRouter);
 
 app.listen(3000, () => {
  console.log("Server running on port 3000");
