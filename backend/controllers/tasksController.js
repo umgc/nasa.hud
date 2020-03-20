@@ -15,7 +15,19 @@ exports.get_tasks = function(req, res) {
             {
                 if(role[key] === req.params.role)
                 {
-                    response = get_steps(obj.file, key);
+                    var out = get_steps(obj.file, key);
+                    if(out.length != undefined)
+                    {
+                        for(var step of out){
+                            if(typeof step === "object")
+                                response.push(...step);
+                            else
+                                response.push(step);
+                        }
+                    }
+                    else
+                        response.push(out);
+                    // response.push(...get_steps(obj.file, key));
                 }
             }
         }
@@ -37,15 +49,34 @@ exports.get_tasks = function(req, res) {
 var get_steps = function(filename, role) {
     var response = [];
     const file = yaml.safeLoad(fs.readFileSync(taskDir+filename, "utf8"));
+    console.log(JSON.stringify(file));
     for(const step of file.steps)
     {
         var keys = Object.keys(step);
         for(const key of keys)
         {
-            if(key.includes(role))
-                response.push(step[role]);
-            else if(key.includes("simo")) {
-                response.push(step[key][role]);
+            if(key.includes(role)){
+                if(step[key] === undefined)
+                    continue;
+                else if(step[key].length != undefined)
+                    response.push(step[key]);
+                else
+                {
+                    // console.log("!!!!!!!!!!!!!!!!!");
+                    // console.log(step[key]);
+                    response.push(...step[key]);
+                }
+            }
+            else if(key.includes("simo")){
+                if(step[key][role] === undefined)
+                    continue;
+                else if(step[key][role].length != undefined){
+                    // console.log("!!!!!!!!!!!!!!!!!");
+                    // console.log(step[key][role]);
+                    response.push(step[key][role]);
+                }
+                else
+                    response.push(...step[key][role]);
             }
         }
     }
