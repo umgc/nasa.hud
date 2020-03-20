@@ -1,10 +1,11 @@
 var fs = require('fs');
 var yaml = require('js-yaml');
 var procDir = './procedures/';
+var taskDir = './tasks/';
 
 // Function to return the parsed steps for each task in the specified procedure file, given a role
 exports.get_tasks = function(req, res) {
-    var tasks = [];
+    var response = [];
     try {
         const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
         for(const obj of file.tasks) {
@@ -14,11 +15,7 @@ exports.get_tasks = function(req, res) {
             {
                 if(role[key] === req.params.role)
                 {
-                    tasks.push(obj.file);
-                    for(var task of tasks)
-                    {
-                        // TODO: Add function to parse task files and pass loop through tasks array, passing each task file as a parameter
-                    }
+                    response = get_steps(obj.file, key);
                 }
             }
         }
@@ -34,5 +31,23 @@ exports.get_tasks = function(req, res) {
             console.log(e);
         }
     }
-    res.status(200).send(tasks);
+    res.status(200).send(response);
+}
+
+var get_steps = function(filename, role) {
+    var response = [];
+    const file = yaml.safeLoad(fs.readFileSync(taskDir+filename, "utf8"));
+    for(const step of file.steps)
+    {
+        var keys = Object.keys(step);
+        for(const key of keys)
+        {
+            if(key.includes(role))
+                response.push(step[role]);
+            else if(key.includes("simo")) {
+                response.push(step[key][role]);
+            }
+        }
+    }
+    return response;
 }
