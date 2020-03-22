@@ -1,9 +1,10 @@
 var mainWindow = {
 
     steps: [],
-    diagrams: [],
+    images: [],
+    imagePages: [],
     currentStepName: undefined,
-
+    currentImagePage: 0,
     voiceControl: undefined,
 
     mission: {},
@@ -21,11 +22,35 @@ var mainWindow = {
             });
 
         mainWindow.voiceControl = new anycontrol();
-        mainWindow.voiceControl.addCommand("next step", mainWindow.nextStep);
+
+       mainWindow.voiceControl.addCommand("next step", mainWindow.nextStep);
         mainWindow.voiceControl.addCommand("previous step", mainWindow.previousStep);
         mainWindow.voiceControl.addCommand("go home", mainWindow.selectProcedure);
+        mainWindow.voiceControl.addCommand("back to step", mainWindow.displayDefault);
+        mainWindow.voiceControl.addCommand("next image page", mainWindow.nextImagePage);
+        mainWindow.voiceControl.addCommand("previous image page", mainWindow.previousImagePage);
+        mainWindow.voiceControl.addCommand("show image ${thing}", mainWindow.showImage);
+
+
+        try {
+            mainWindow.voiceControl.start();
+        }
+        catch (e) { ; }
 
     },
+
+    showImage: function (input) {
+        var thing = input.thing;
+        if (thing === "one" || thing === "1")
+            mainWindow.showImage1();
+        else if (thing === "to" || thing === "too" || thing === "two" || thing === "2")
+            mainWindow.showImage2();
+        else if (thing === "three" || thing === "3" || thing === "tree")
+            mainWindow.showImage3();
+        else if (thing === "four" || thing === "for" || thing === "4" )
+            mainWindow.showImage4();
+    },
+
 
     selectProcedure: function () {
 
@@ -98,12 +123,13 @@ var mainWindow = {
 
     start: function (data) {
 
-        mainWindow.diagrams = data.diagrams;
+        mainWindow.images = data.images;
         mainWindow.steps = data.steps;
         mainWindow.linkSteps(mainWindow.steps);
-        mainWindow.currentStepName = mainWindow.steps[0].name;
-        mainWindow.displayStep(mainWindow.currentStepName);
+        mainWindow.splitImagesIntoPages();
 
+        mainWindow.currentStepName = mainWindow.steps[0].name;
+        mainWindow.display(mainWindow.currentStepName);
         $(document).keyup(mainWindow.keyhandler);
     },
 
@@ -120,22 +146,25 @@ var mainWindow = {
         return undefined;
     },
 
-    displayDiagram: function (stepName) {
-        var diagramData = mainWindow.getFromName(mainWindow.diagrams, stepName);
+    showImage1: function () {
+        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][1].name);
+    },
+    showImage2: function () {
+        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][2].name);
+    },
+    showImage3: function () {
+        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][3].name);
+    },
+    showImage4: function () {
+        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0].name);
+    },
+    displayImage: function (stepName) {
+        var imageData  = mainWindow.getFromName(mainWindow.images, stepName);
 
-        var html = '<div class="container">';
-        html += '<div class="row">';
-        html += '<div class="col-sm">';
-        html += '<div class="card" style="width:100%;">';
-        html += '<img src="' + diagramData.url + '" class="card-img-top" alt="...">'
-
-        html += '<div class="card-body">';
-        //html += '<h5 class="card-title">Diagram goes Here!</h5 >';
+        var html = '<div class="container-fuild">';
+        html += '<img src="' + imageData.url + '" class="img-fluid" alt="...">'
+        html += "</br>";
         html += mainWindow.slideInBackToStep();
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
         html += '</div>';
         $('#mainwindow').html(html);
     },
@@ -163,64 +192,13 @@ var mainWindow = {
         var html = "</div>";
         html += '<div class="card-body">';
 
-        html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.displayStep('" + mainWindow.currentStepName + "')\" > Back to Step</button > ";
+        html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.display('" + mainWindow.currentStepName + "')\" > Back to Step</button > ";
         html += "</div>";
         html += '<div class="card-body">';
         return html; 
     },
 
-    slideInJumpBoxes: function (stepData) {
-
-        var html = "</div>";
-        html += '<div class="card-body">';
-
-        //jump to step
-        html += '<div class="btn-group" role="group">';
-        if (stepData.previousStepName !== undefined)
-            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.previousStep()\" >Prev Step</button > ";
-
-        /*
-        html += '<div class="dropdown ">';
-        html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        html += 'Jump to Step';
-        html += '</button>';
-        html += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        html += mainWindow.steps.reduce(function (output, item) {
-            return output += '<a class="dropdown-item" onClick=\"mainWindow.jumpToStep(\'' + item['name'] + '\')\" >' + item['name'] + '</a>';
-        }, "");
-
-        html += '</div>';
-        html += '</div>'; */
-
-        //jump to diagram
-        html += '<div class="dropdown ">';
-        html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        html += 'Jump to Diagram';
-        html += '</button>';
-        html += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        html += mainWindow.diagrams.reduce(function (output, item) {
-            return output += '<a class="dropdown-item" onClick=\"mainWindow.displayDiagram(\'' + item['name'] + '\')\" >' + item['name'] + '</a>';
-        }, "");
-
-        html += '</div>';
-        html += '</div>';
-
-        if (stepData.nextStepName !== undefined)
-            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.nextStep()\" >Next Step</button > ";
-        else
-            html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.displayFinalStep()\" >Complete</button > ";
-
-        html += '</div>';
-        html += '</div>';
-
-        html += '<div class="card-body">';
-
-
-        
-
-        return html;
-
-    },
+    
 
 
     linkSteps: function (steps) {
@@ -232,6 +210,29 @@ var mainWindow = {
         }
     },
 
+    splitImagesIntoPages: function () {
+
+        var currPage = ["","","",""];
+
+
+
+        for (var i = 1; i <= mainWindow.images.length; i++) {
+
+            var currentImage = mainWindow.images[i - 1];
+
+            var mod = i % 4;
+            currPage[mod] = currentImage;      
+
+            if (mod === 0) {
+                mainWindow.imagePages.push(currPage);
+                currPage = ["", "", "", ""];
+            }
+        }
+        if (mainWindow.images.length % 4 !== 0)
+            mainWindow.imagePages.push(currPage);
+    },
+
+
     nextStep: function () {
 
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
@@ -241,7 +242,7 @@ var mainWindow = {
         console.log(currStep.nextStepName);
 
         if (currStep.nextStepName === undefined)
-            return;
+            mainWindow.display();
 
         mainWindow.jumpToStep(currStep.nextStepName);
     },
@@ -250,7 +251,8 @@ var mainWindow = {
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         if (currStep.previousStepName === undefined)
-            return;
+            mainWindow.display();
+
 
         mainWindow.jumpToStep(currStep.previousStepName);
     },
@@ -258,17 +260,59 @@ var mainWindow = {
     jumpToStep: function (name) {
 
         mainWindow.currentStepName = name;
-        mainWindow.displayStep(mainWindow.currentStepName);
+        mainWindow.display(mainWindow.currentStepName);
 
     },
+
+    nextImagePage: function () {
+
+        if (mainWindow.currentImagePage < mainWindow.imagePages.length)
+            mainWindow.currentImagePage++;
+
+        mainWindow.display(mainWindow.currentStepName);
+
+    },
+
+    previousImagePage: function () {
+
+        if (mainWindow.currentImagePage > 0)
+            mainWindow.currentImagePage--;
+
+
+            mainWindow.display(mainWindow.currentStepName);
+
+    },
+
+    displayDefault: function () {
+        mainWindow.display(mainWindow.currentStepName);
+    },
+
+    display: function (stepName) {
+        var html = '<div class="container-fuild">';
+        html += '<div class="row" style="margin-right:0px">';
+
+            html += '<div class="col">';
+
+            //final step stuff
+            if (stepName === undefined)
+                html += mainWindow.displayFinalStep();
+            else
+                html += mainWindow.displayStep(stepName);
+            html += '</div>';
+            html += '<div class="col">';
+
+            html += mainWindow.displayImageThumbnails();
+            html += '</div>';
+            html += '</div>';
+        console.log(html);
+        $('#mainwindow').html(html);
+    },
+
 
     displayStep: function (name) {
         var stepData = mainWindow.getFromName(mainWindow.steps, name);
 
-        var html = '<div class="container">';
-        html += '<div class="row">';
-        html += '<div class="col-sm">';
-        html += '<div class="card">';
+        var html = '<div class="card">';
 
         if (stepData.danger !== undefined) {
             html += '<div class="card-header alert-danger">';
@@ -288,34 +332,73 @@ var mainWindow = {
 
         html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
         html += mainWindow.slideInCheckboxes(stepData);
-        html += mainWindow.slideInJumpBoxes(stepData);
         html += '</div>';
         html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        $('#mainwindow').html(html); 
-        
 
+
+        return html;
     },
+
+
+
 
     displayFinalStep: function () {
-
-
-        var html = '<div class="container">';
-        html += '<div class="row">';
-        html += '<div class="col-sm">';
-        html += '<div class="card">';
+        var html = '<div class="card">';
         html += '<div class="card-body">';
         html += '<h5 class="card-title">Procedure Complete</h5 >';
+        html += '</div>'; 
         html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        $('#mainwindow').html(html); 
         window.setTimeout(mainWindow.selectProcedure, 5000);
+        return html;
     },
+
+
+
+
+
+
+    displayImageThumbnails() {
+
+        var html = '<div class="card">';
+
+        if (mainWindow.currentImagePage < 0 || mainWindow.currentImagePage === mainWindow.imagePages.length) {
+
+            html += '<div class="card-body">';
+            html += 'There are no other images';
+            html += '</div>';
+        }
+        else {
+
+        
+            html += '<div class="row">';
+            html += '<div class="col">';
+            if (mainWindow.imagePages[mainWindow.currentImagePage][1] !== "") {
+                html += '<div>1</div>';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][1].url + '" class="img-fluid mb-4" alt="">';
+            }
+            if (mainWindow.imagePages[mainWindow.currentImagePage][3] !== "") {
+                html += '<div>3</div>';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][3].url + '" class="img-fluid mb-4" alt="">';
+            }
+            html += '</div>';
+            html += '<div class="col">';
+            if (mainWindow.imagePages[mainWindow.currentImagePage][2] !== "") {
+                html += '<div>2</div>';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][2].url + '" class="img-fluid mb-4" alt="">';
+            }
+            if (mainWindow.imagePages[mainWindow.currentImagePage][0] !== "") {
+                html += '<div>4</div>';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][0].url + '" class="img-fluid mb-4" alt="">';
+            }
+            html += '</div>';
+            html += '</div>';
+        }
+        html += '</div>';
+        return html;
+    },
+
+
+
 
     keyhandler: function (event) {
         console.log(event);
