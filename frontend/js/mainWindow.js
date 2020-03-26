@@ -6,6 +6,7 @@ var mainWindow = {
     currentStepName: undefined,
     currentImagePage: 0,
     voiceControl: undefined,
+    currentProcedure : undefined,
 
     mission: {},
 
@@ -23,83 +24,89 @@ var mainWindow = {
 
         mainWindow.voiceControl = new anycontrol();
 
-       mainWindow.voiceControl.addCommand("next step", mainWindow.nextStep);
-        mainWindow.voiceControl.addCommand("previous step", mainWindow.previousStep);
-        mainWindow.voiceControl.addCommand("go home", mainWindow.selectProcedure);
-        mainWindow.voiceControl.addCommand("back to step", mainWindow.displayDefault);
-        mainWindow.voiceControl.addCommand("next image page", mainWindow.nextImagePage);
-        mainWindow.voiceControl.addCommand("previous image page", mainWindow.previousImagePage);
-        mainWindow.voiceControl.addCommand("show image ${thing}", mainWindow.showImage);
-
+        mainWindow.voiceControl.addCommand("maestro next step", mainWindow.nextStep);
+        mainWindow.voiceControl.addCommand("maestro previous step", mainWindow.previousStep);
+        mainWindow.voiceControl.addCommand("maestro go home", mainWindow.selectProcedure);
+        mainWindow.voiceControl.addCommand("maestro back to step", mainWindow.displayDefault);
+        mainWindow.voiceControl.addCommand("maestro next image page", mainWindow.nextImagePage);
+        mainWindow.voiceControl.addCommand("maestro previous image page", mainWindow.previousImagePage);
+        mainWindow.voiceControl.addCommand("maestro show image ${thing}", mainWindow.showImage);
+        mainWindow.voiceControl.addCommand("maestro select procedure ${procedureNumber}", mainWindow.selectRole);
+        mainWindow.voiceControl.addCommand("maestro select role ${roleNumber}", mainWindow.downloadSteps);
+        mainWindow.voiceControl.addCommand("maestro select roll ${roleNumber}", mainWindow.downloadSteps);
+        mainWindow.voiceControl.addCommand("maestro select troll ${roleNumber}", mainWindow.downloadSteps);
+        mainWindow.voiceControl.addCommand("maestro select row ${roleNumber}", mainWindow.downloadSteps);
 
         try {
             mainWindow.voiceControl.start();
         }
         catch (e) { ; }
+        mainWindow.voiceControl.DEBUG = true;
 
     },
 
+    wordToNumber: function (input) {
+        if (input === "one" || input === "1")
+            return 1;
+        else if (input === "to" || input === "too" || input === "two" || input === "2")
+            return 2;
+        else if (input === "three" || input === "3" || input === "tree")
+            return 3;
+        else if (input === "four" || input === "for" || input === "4")
+            return 4;
+        else if (input === "five" )
+            return 5;
+        else if (input === "six" || input === "sex" || input === "sick")
+            return 6;
+    },
+
+
     showImage: function (input) {
-        var thing = input.thing;
-        if (thing === "one" || thing === "1")
-            mainWindow.showImage1();
-        else if (thing === "to" || thing === "too" || thing === "two" || thing === "2")
-            mainWindow.showImage2();
-        else if (thing === "three" || thing === "3" || thing === "tree")
-            mainWindow.showImage3();
-        else if (thing === "four" || thing === "for" || thing === "4" )
-            mainWindow.showImage4();
+        var word = input.thing;
+        var number = mainWindow.wordToNumber(word);
+        if (number !== 4)
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][number].name);
+        else
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0].name);
     },
 
 
     selectProcedure: function () {
+        
+        if (mainWindow.mission.length === 1) {
+            mainWindow.selectRole({ procedureNumber: "one" });
+            return;
+        }
 
 
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Procedure Select</h5>';
-        html += ' <p class="card-text">Please select a procedure to continue</p >';
+        html += ' <p class="card-text">Please say select procedure and the procedure number to continue</p >';
 
-        html += '<div class="dropdown ">';
-        html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        html += 'Procedure Select';
-        html += '</button>';
-        html += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        html += mainWindow.mission.reduce(function (output, item) {
-            return output += '<a class="dropdown-item" onClick=\"mainWindow.selectRole(\'' + item['name'] + '\')\" >' + item['name'] + '</a>';
-        }, "");
-
-        html += '</div>';
-        html += '</div>';
-
+        for (var i = 0; i < mainWindow.mission.length; i++)
+            html += '<p>Procedure ' + ( i + 1 )+ ' : ' + mainWindow.mission[i].name + '</p>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
         $('#mainwindow').html(html);
     },
 
-    selectRole: function (procedureName) {
-        var currentProcedure = mainWindow.getProcedure(procedureName);
+    selectRole: function (voiceInput) {
 
-        console.log(currentProcedure);
+        var word = voiceInput.procedureNumber;
+        var number = mainWindow.wordToNumber(word);
+
+        mainWindow.currentProcedure = mainWindow.mission[number - 1];
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Role Select</h5>';
-        html += ' <p class="card-text">Please select a role to continue</p >';
+        html += ' <p class="card-text">Please say select role and the role number to continue</p >';
 
-        html += '<div class="dropdown ">';
-        html += '<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-        html += 'Role Select';
-        html += '</button>';
-        html += '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-        html += currentProcedure.roles.reduce(function (output, item) {
-            return output += '<a class="dropdown-item" onClick=\"mainWindow.downloadSteps(\'' + procedureName + '\', \'' + item + '\')\" >' + item + '</a>';
-        }, "");
-
-        html += '</div>';
-        html += '</div>';
+        for (var i = 0; i < mainWindow.currentProcedure.roles.length; i++)
+            html += '<p>Role ' + (i + 1) + ' : ' + mainWindow.currentProcedure.roles[i] + '</p>';
 
         html += '</div>';
         html += '</div>';
@@ -107,10 +114,12 @@ var mainWindow = {
         $('#mainwindow').html(html);
     },
 
-    downloadSteps: function (procedureName, roleName) {
+    downloadSteps: function (voiceInput) {
+        var roleNumber = mainWindow.wordToNumber(voiceInput.roleNumber);
+        var roleName = mainWindow.currentProcedure.roles[roleNumber - 1];
 
-        var url = procedureName + "/" + roleName + ".json";
-
+        var url = mainWindow.currentProcedure.name + "/" + roleName + ".json";
+        console.log("url>" + url);
         $.get(url)
             .fail(function (error) {
                 console.log(error);
@@ -123,6 +132,14 @@ var mainWindow = {
 
     start: function (data) {
 
+        mainWindow.steps = [];
+        mainWindow.images = [];
+        mainWindow.imagePages = [];
+        mainWindow.currentStepName = undefined;
+        mainWindow.currentImagePage = 0;
+
+
+        console.log(data);
         mainWindow.images = data.images;
         mainWindow.steps = data.steps;
         mainWindow.linkSteps(mainWindow.steps);
@@ -146,18 +163,6 @@ var mainWindow = {
         return undefined;
     },
 
-    showImage1: function () {
-        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][1].name);
-    },
-    showImage2: function () {
-        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][2].name);
-    },
-    showImage3: function () {
-        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][3].name);
-    },
-    showImage4: function () {
-        mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0].name);
-    },
     displayImage: function (stepName) {
         var imageData  = mainWindow.getFromName(mainWindow.images, stepName);
 
