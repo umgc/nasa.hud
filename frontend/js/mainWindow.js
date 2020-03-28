@@ -256,7 +256,7 @@ var mainWindow = {
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         if (currStep.previousStepName === undefined)
-            mainWindow.display();
+            return;
 
 
         mainWindow.jumpToStep(currStep.previousStepName);
