@@ -73,8 +73,6 @@ var mainWindow = {
 
     selectProcedure: function () {
         
-
-
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
@@ -292,19 +290,21 @@ var mainWindow = {
         var html = '<div class="container-fuild">';
         html += '<div class="row" style="margin-right:0px">';
 
-            html += '<div class="col">';
+        html += '<div class="col">';
 
-            //final step stuff
-            if (stepName === undefined)
-                html += mainWindow.displayFinalStep();
-            else
-                html += mainWindow.displayStep(stepName);
-            html += '</div>';
-            html += '<div class="col">';
+        //final step stuff
+        if (stepName === undefined)
+            html += mainWindow.displayFinalStep();
+        else
+            html += mainWindow.displayStep(stepName);
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="row" style="margin-right:0px">';
+        html += '<div class="col">';
 
-            html += mainWindow.displayImageThumbnails();
-            html += '</div>';
-            html += '</div>';
+        html += mainWindow.displayImageThumbnails();
+        html += '</div>';
+        html += '</div>';
         console.log(html);
         $('#mainwindow').html(html);
     },
@@ -377,16 +377,20 @@ var mainWindow = {
                 html += '<div>1</div>';
                 html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][1].url + '" class="img-fluid mb-4" alt="">';
             }
-            if (mainWindow.imagePages[mainWindow.currentImagePage][3] !== "") {
-                html += '<div>3</div>';
-                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][3].url + '" class="img-fluid mb-4" alt="">';
-            }
             html += '</div>';
             html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][2] !== "") {
                 html += '<div>2</div>';
                 html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][2].url + '" class="img-fluid mb-4" alt="">';
             }
+            html += '</div>';
+            html += '<div class="col">';
+            if (mainWindow.imagePages[mainWindow.currentImagePage][3] !== "") {
+                html += '<div>3</div>';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][3].url + '" class="img-fluid mb-4" alt="">';
+            }
+            html += '</div>';
+            html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][0] !== "") {
                 html += '<div>4</div>';
                 html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][0].url + '" class="img-fluid mb-4" alt="">';
