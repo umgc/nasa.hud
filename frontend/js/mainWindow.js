@@ -73,10 +73,6 @@ var mainWindow = {
 
     selectProcedure: function () {
         
-        if (mainWindow.mission.length === 1) {
-            mainWindow.selectRole({ procedureNumber: "one" });
-            return;
-        }
 
 
         var html = '<div class="container">';
