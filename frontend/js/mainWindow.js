@@ -77,7 +77,7 @@ var mainWindow = {
         html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Procedure Select</h5>';
-        html += ' <p class="card-text">Please say select procedure and the procedure number to continue</p >';
+        html += ' <p class="card-text">Please say &quot;maestro select procedure&quot; and the procedure number to continue</p >';
 
         for (var i = 0; i < mainWindow.mission.length; i++)
             html += '<p>Procedure ' + ( i + 1 )+ ' : ' + mainWindow.mission[i].name + '</p>';
@@ -97,7 +97,7 @@ var mainWindow = {
         html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Role Select</h5>';
-        html += ' <p class="card-text">Please say select role and the role number to continue</p >';
+        html += ' <p class="card-text">Please say &quot;maestro select role&quot; and the role number to continue</p >';
 
         for (var i = 0; i < mainWindow.currentProcedure.roles.length; i++)
             html += '<p>Role ' + (i + 1) + ' : ' + mainWindow.currentProcedure.roles[i] + '</p>';
