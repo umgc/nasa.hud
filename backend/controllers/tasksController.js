@@ -4,6 +4,7 @@ var procDir = './procedures/';
 var taskDir = './tasks/';
 var taskCounter = 0;
 
+
 // Function to return the parsed steps for each task in the specified procedure file, given a role
 exports.get_tasks = function(req, res) {
     var response = [];
@@ -50,6 +51,9 @@ exports.get_tasks = function(req, res) {
         for(const i of r){
             console.log(JSON.stringify(i));
         }
+
+        
+        
     }
     catch(e){
         // Handle file not found exception
@@ -66,6 +70,7 @@ exports.get_tasks = function(req, res) {
     res.status(200).send(r);
 }
 
+ 
 var decompose = function(response){
     var steps = [];
     for(const v of response){
