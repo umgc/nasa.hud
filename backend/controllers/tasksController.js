@@ -16,7 +16,6 @@ exports.get_tasks = function(req, res) {
             if(keys.display === req.params.role)
                 actorKey = keys.key;
         }
-
         for(const obj of file.tasks) {
             var role = obj.roles;
             var keys = Object.keys(role);
@@ -24,10 +23,7 @@ exports.get_tasks = function(req, res) {
             {
                 if(role[key] === actorKey) //added 3/27/20
                 {   
-                    
                     var out = get_steps(obj.file, key);
-                   
-                   
                    // console.log(out);
                    // console.log('--------------------------');
                     if(out.length != undefined)
@@ -45,7 +41,6 @@ exports.get_tasks = function(req, res) {
                 }
             }
         }
-       
         var r = decompose(response);
         for(const i of r){
             console.log(JSON.stringify(i));
@@ -65,7 +60,7 @@ exports.get_tasks = function(req, res) {
     
     res.status(200).send(r);
 }
-
+ 
 var decompose = function(response){
     var steps = [];
     for(const v of response){
@@ -89,10 +84,7 @@ var decompose = function(response){
        //console.log(JSON.stringify(stepsList) +'\n');
     }    
     return steps;
-    
-    
 }
-
 
 //function takes filename and role = roles
 var get_steps = function(filename, role) {

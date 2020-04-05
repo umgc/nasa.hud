@@ -7,7 +7,7 @@ exports.get_roles = function(req, res) {
     var roles = [];
     const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
     for(const role of file.columns){
-        roles.push(role.key);
+        roles.push(role.display);
     }
     res.status(200).send(roles);
 }
