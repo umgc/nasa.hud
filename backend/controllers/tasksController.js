@@ -47,8 +47,10 @@ exports.get_tasks = function(req, res) {
             }
         }
        
+        //console.log(JSON.stringify(response));
+
         var r = decompose(response);
-        for(const i of r){
+        for(const i of response){
             console.log(JSON.stringify(i));
         }
 
@@ -79,7 +81,7 @@ var decompose = function(response){
             if(keys.length === 1){
                 steps.push(v);
             }
-            if(keys.length >1 && typeof v === 'object'){///TRY THIS************************
+            if(keys.length >1 && typeof v === 'object'){
                 for(const k of keys){
                     var stepFormatted = {[k]:v[k]}
                     steps.push(stepFormatted);
@@ -104,15 +106,15 @@ var get_steps = function(filename, role) {
     //estalblish header keys:pairs here to sync with each step
     var response = [];
     const file = yaml.safeLoad(fs.readFileSync(taskDir+filename, "utf8"));
-    var title = [{title: file.title}];
-    taskKeyPair = [{taskNumber: taskCounter++}];
-    response.push(taskKeyPair);
-    response.push(title);
+    var title = {title: file.title};
+    taskKeyPair = {taskNumber: taskCounter++};
+    //response.push(taskKeyPair);
+    //response.push(title);
     for(i=0; i<file.roles.length; i++){
         var actorRole = file.roles[i];
         for(property in actorRole){
             if(actorRole[property] === role){
-                response.push([file.roles[i]]);
+                response.push([{taskTitleCard:[taskKeyPair, title,file.roles[i]]}]);
             }
         }
     }
@@ -125,21 +127,26 @@ var get_steps = function(filename, role) {
             if(key.includes(role)){
                 if(step[key] === undefined)
                     continue;
-                else if(step[key].length != undefined)
-                    response.push(step[key]);
-                else
-                {
-                    response.push(...step[key]);
-                }
+                else if(step[key].length != undefined && step[key].length === 1)
+                    response.push([{MaestroStep:step[key]}]);
+                //else
+                //{
+                    //response.push(...step[key]);
+                //}
+                else if(step[key].length != undefined && step[key].length > 1)
+                    response.push([{MaestroStep:step[key]}]); 
             }
             else if(key.includes("simo")){
                     if(step[key][role] === undefined)
                         continue;
-                else if(step[key][role].length != undefined){
-                        response.push(step[key][role]);
+                else if(step[key][role].length != undefined && step[key][role].length === 1){
+                        response.push([{MaestroStep:step[key][role]}]);
                 }
-                else
-                    response.push(...step[key][role]);
+                //else
+                    //response.push(...step[key][role]);
+                    else if(step[key][role].length != undefined && step[key][role].length > 1){
+                        response.push([{MaestroStep:step[key][role]}]);
+                }
             }
         }
     }
