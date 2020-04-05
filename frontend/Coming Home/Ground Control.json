@@ -26,18 +26,54 @@
     }
 
   ],
-  "diagrams": [
+  "images": [
     {
       "name": "1",
-      "url": "http://placekitten.com/740/450"
+      "url": "Coming Home/diagrams/1.png"
     },
     {
       "name": "2",
-      "url": "http://placekitten.com/713/400"
+      "url": "Coming Home/diagrams/2.png"
     },
     {
       "name": "3",
-      "url": "http://placekitten.com/813/450"
+      "url": "Coming Home/diagrams/3.png"
+    },
+    {
+      "name": "4",
+      "url": "Coming Home/diagrams/4.png"
+    },
+    {
+      "name": "5",
+      "url": "Coming Home/diagrams/5.png"
+    },
+    {
+      "name": "6",
+      "url": "Coming Home/diagrams/6.png"
+    },
+    {
+      "name": "7",
+      "url": "Coming Home/diagrams/7.png"
+    },
+    {
+      "name": "8",
+      "url": "Coming Home/diagrams/8.png"
+    },
+    {
+      "name": "9",
+      "url": "Coming Home/diagrams/9.png"
+    },
+    {
+      "name": "10",
+      "url": "Coming Home/diagrams/10.png"
+    },
+    {
+      "name": "11",
+      "url": "Coming Home/diagrams/11.png"
+    },
+    {
+      "name": "12",
+      "url": "Coming Home/diagrams/12.png"
     }
   ]
 }

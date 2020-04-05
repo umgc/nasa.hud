@@ -4,8 +4,8 @@ var procDir = './procedures/';
 var taskDir = './tasks/';
 var taskCounter = 0;
 
-
 // Function to get tasks from procedure file for role selected by actor
+
 exports.get_tasks = function(req, res) {
     var response = [];
     var actorKey; 
@@ -17,7 +17,6 @@ exports.get_tasks = function(req, res) {
             if(keys.display === req.params.role)
                 actorKey = keys.key;
         }
-
         for(const obj of file.tasks) {
             var role = obj.roles;
             var keys = Object.keys(role);
@@ -40,9 +39,9 @@ exports.get_tasks = function(req, res) {
                 }
             }
         }
+
        var r = decompose(response);
-        
-        
+       
     }
     catch(e){
         
@@ -58,6 +57,7 @@ exports.get_tasks = function(req, res) {
     
     res.status(200).send(r);
 }
+
 
 //function to extract independent task steps and decompose into manageable objects
 var decompose = function(response){
@@ -80,12 +80,10 @@ var decompose = function(response){
         
     }
     return steps;
-    
-    
 }
 
-
 //function to get headers and steps from task files 
+
 var get_steps = function(filename, role) {
     //estalblish header keys:pairs here to sync with each step
     var response = [];
