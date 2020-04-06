@@ -51,7 +51,7 @@ exports.get_tasks = function(req, res) {
         }
         // Handle invalid yaml files
         else {
-            res.status(420).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
+            res.status(422).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
             console.log(e);
         }
     }
