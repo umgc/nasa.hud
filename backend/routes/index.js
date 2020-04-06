@@ -11,7 +11,7 @@ router.get('/roles/:filename', roles_controller.get_roles);
 router.get('/tasks/:filename/:role', tasks_controller.get_tasks);
 
 router.get('/', function(req, res) {
-    res.send('Maestro HUD Backend Services')
+    res.status(200).json('Maestro HUD Backend Services')
 })
 
 module.exports = router;

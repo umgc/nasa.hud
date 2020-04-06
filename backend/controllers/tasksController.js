@@ -23,7 +23,7 @@ exports.get_tasks = function(req, res) {
             var keys = Object.keys(role);
             for(var key of keys)
             {
-                if(role[key] === actorKey) 
+                if(role[key] === req.params.role) 
                 {   
                     var out = get_steps(obj.file, key);
                     if(out.length != undefined)
