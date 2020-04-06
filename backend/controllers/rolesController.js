@@ -8,7 +8,7 @@ exports.get_roles = function(req, res) {
     try {
         const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
         for(const role of file.columns){
-            roles.push(role.display);
+          roles.push(role.key);
         }
         res.status(200).send(roles);
     } catch (e) {
@@ -16,5 +16,6 @@ exports.get_roles = function(req, res) {
         if (e.code === 'ENOENT') {
             res.status(404).json({"error": "The selected file does not exist. Please try again."});
         }
+
     }
 }
