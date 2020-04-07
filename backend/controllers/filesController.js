@@ -1,8 +1,9 @@
 var fs = require('fs');
+var path = require('path');
 var yaml = require('js-yaml');
 var appRoot = require('app-root-path');
-var procDir = './assets/procedures/';
-var imageDir = '\\assets\\images\\';
+var procDir = path.normalize('./assets/procedures/');
+var imageDir = path.normalize('/assets/images/');
 
 // Function to return list of all procedure files from the filesystem
 exports.get_files = function (req, res) {
