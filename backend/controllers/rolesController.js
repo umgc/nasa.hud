@@ -1,6 +1,6 @@
 var fs = require('fs');
 var yaml = require('js-yaml');
-var procDir = './procedures/';
+var procDir = './assets/procedures/';
 
 // Function to return list of roles for a given procedure file
 exports.get_roles = function(req, res) {
