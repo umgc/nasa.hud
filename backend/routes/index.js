@@ -9,6 +9,7 @@ router.get('/getfiles', file_controller.get_files);
 router.get('/lint/:filename', file_controller.lint_file);
 router.get('/roles/:filename', roles_controller.get_roles);
 router.get('/tasks/:filename/:role', tasks_controller.get_tasks);
+router.get('/getimage/:filename', file_controller.get_image);
 
 router.get('/', function(req, res) {
     res.status(200).json('Maestro HUD Backend Services')
