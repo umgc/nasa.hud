@@ -35,7 +35,6 @@ exports.lint_file = function (req, res) {
 exports.get_image = function (req, res) {
     // express sendFile requires absolute path so using app-root-path module to get root and prepending it
     var file = appRoot + imageDir + req.params.filename;
-    console.log('Serving image ' + appRoot + imageDir + req.params.filename);
     res.status(200).sendFile(file, function (err) {
         if (err) {
             if (err.code === 'ENOENT') {
