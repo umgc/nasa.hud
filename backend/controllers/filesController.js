@@ -1,6 +1,6 @@
 var fs = require('fs');
 var yaml = require('js-yaml');
-var procDir = './procedures/';
+var procDir = './assets/procedures/';
 
 // Function to return list of all procedure files from the filesystem
 exports.get_files = function (req, res) {

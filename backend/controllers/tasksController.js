@@ -1,7 +1,7 @@
 var fs = require('fs');
 var yaml = require('js-yaml');
-var procDir = './procedures/';
-var taskDir = './tasks/';
+var procDir = './assets/procedures/';
+var taskDir = './assets/tasks/';
 var taskCounter = 0;
 
 
