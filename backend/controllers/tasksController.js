@@ -1,7 +1,7 @@
 var fs = require('fs');
 var yaml = require('js-yaml');
-var procDir = './procedures/';
-var taskDir = './tasks/';
+var procDir = './assets/procedures/';
+var taskDir = './assets/tasks/';
 var taskCounter = 0;
 
 // Function to get tasks from procedure file for role selected by actor
@@ -73,7 +73,7 @@ exports.get_tasks = function(req, res) {
         }
         // Handle invalid yaml files
         else {
-            res.status(420).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
+            res.status(422).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
             console.log(e);
         }
     }

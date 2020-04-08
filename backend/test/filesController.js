@@ -6,7 +6,7 @@ describe('api index', function() {
     it('should return welcome text', function(done) {
         request(app)
             .get('/hud/api')
-            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect('Content-Type', 'image/png')
             .expect(200, done)
     });
 });
@@ -39,4 +39,16 @@ describe('files controller', function() {
             .expect('Content-Type', 'application/json; charset=utf-8')
             .expect(422, done)
     });
+    it('should return an image file', function(done) {
+        request(app)
+            .get('/hud/api/getimage/maestro-hud-logo.png')
+            .expect('Content-Type', 'image/png')
+            .expect(200, done)
+    });
+    it('should return 404 File Not Found', function(done) {
+        request(app)
+            .get('/hud/api/getimage/not-a-real-image.png')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(404, done)
+    })
 });
