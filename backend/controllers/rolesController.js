@@ -1,4 +1,5 @@
 var fs = require('fs');
+
 var yaml = require('js-yaml');
 var procDir = './assets/procedures/';
 
@@ -6,6 +7,7 @@ var procDir = './assets/procedures/';
 exports.get_roles = function(req, res) {
     var roles = [];
     try {
+
         const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
         for(const role of file.columns){
           roles.push(role.key);
