@@ -12,11 +12,6 @@ exports.get_tasks = function(req, res) {
    
     try {
         const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
-        for(const keys of file.columns){ 
-            if(keys.display === req.params.role)
-                actorKey = keys.key;
-        }
-
         for(const obj of file.tasks) {
             var role = obj.roles;
             var keys = Object.keys(role);
