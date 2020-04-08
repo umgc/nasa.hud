@@ -4,7 +4,7 @@ var procDir = './assets/procedures/';
 var taskDir = './assets/tasks/';
 var taskCounter = 0;
 
-// Function to get tasks from procedure file for role selected by actor
+// Function to get tasks from procedure file for role selected by an actor
 exports.get_tasks = function(req, res) {
     var response = [];
     try {
@@ -34,12 +34,11 @@ exports.get_tasks = function(req, res) {
 
     var r = decompose(response);
 
-
     var steps = [];
     var images = [];
     var input = r;
 
-    //gathers the steps
+    //gathers the steps from decomposition
     for (var i = 0; i < input.length; i++) {
     
         var results = undefined;
@@ -54,9 +53,7 @@ exports.get_tasks = function(req, res) {
     }
     
     r = { steps, images };
-        
-    console.log(r);
-    
+       
     }
     catch(e){
         
@@ -92,14 +89,9 @@ var decompose = function(response){
             }
             else if(typeof v != 'object')
                 steps.push(v);
-        
-        
     }
     return steps;
-    
-    
 }
-
 
 //function to get headers and steps from task files 
 var get_steps = function(filename, role) {
@@ -143,7 +135,6 @@ var get_steps = function(filename, role) {
             }
         }
     }
-   
     return response;
 }
 
@@ -153,12 +144,10 @@ var get_steps = function(filename, role) {
      * @returns [{step},{images}] formatted step
      */
     function formatStep(stepInput) {
-    
-    
+        
         if (stepInput === "TBD")
             return { name : "TBD", text: ["TBD"], images : [] }; //static text.
-    
-    
+        
         var text = [];
         var checkboxes = [];
         var title = "";
