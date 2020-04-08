@@ -4,7 +4,6 @@ var procDir = './procedures/';
 var taskDir = './tasks/';
 var taskCounter = 0;
 
-
 // Function to get tasks from procedure file for role selected by actor
 exports.get_tasks = function(req, res) {
     var response = [];
@@ -40,9 +39,32 @@ exports.get_tasks = function(req, res) {
                 }
             }
         }
-       var r = decompose(response);
+
+    var r = decompose(response);
+
+
+    var steps = [];
+    var images = [];
+    var input = r;
+
+    //gathers the steps
+    for (var i = 0; i < input.length; i++) {
+    
+        var results = undefined;
+        if (input[i]['MaestroStep'] !== undefined)
+            results = formatStep(input[i]['MaestroStep']);
+        else if (input[i]['taskTitleCard'] !== undefined)
+            results = formatStep(input[i]['taskTitleCard']);
+        if (results.step !== undefined)
+            steps.push(results.step);
+        if (results.images.length !== 0)
+            images.push(...results.images);
+    }
+    
+    r = { steps, images };
         
-        
+    console.log(r);
+    
     }
     catch(e){
         
@@ -58,6 +80,8 @@ exports.get_tasks = function(req, res) {
     
     res.status(200).send(r);
 }
+
+
 
 //function to extract independent task steps and decompose into manageable objects
 var decompose = function(response){
@@ -113,7 +137,7 @@ var get_steps = function(filename, role) {
                     response.push([{MaestroStep:step[key]}]);
                
                 else if(step[key].length != undefined && step[key].length > 1)
-                    response.push([{MaestroStep:step[key]}]); 
+                response.push([{MaestroStep:step[key]}]);
             }
             else if(key.includes("simo")){
                     if(step[key][role] === undefined)
@@ -122,7 +146,7 @@ var get_steps = function(filename, role) {
                         response.push([{MaestroStep:step[key][role]}]);
                 }
                 else if(step[key][role].length != undefined && step[key][role].length > 1){
-                        response.push([{MaestroStep:step[key][role]}]);
+                    response.push([{MaestroStep:step[key][role]}]);
                 }
             }
         }
@@ -130,3 +154,92 @@ var get_steps = function(filename, role) {
    
     return response;
 }
+
+ /**
+     * reformats a step into the proper style
+     * @param {object} stepInput unformatted step
+     * @returns [{step},{images}] formatted step
+     */
+    function formatStep(stepInput) {
+    
+    
+        if (stepInput === "TBD")
+            return { name : "TBD", text: ["TBD"], images : [] }; //static text.
+    
+    
+        var text = [];
+        var checkboxes = [];
+        var title = "";
+        var duration = "";
+        var caution = "";
+        var warning = "";
+        var images = [];
+    
+        var setSomething = false;
+    
+        stepInput.forEach(function (item) {
+            for (key in item) {
+                if (key === "images") {
+                    images.push(...item[key].map(function (value) { return value.path;}));
+                }
+                else if (key === "step" || key === "text" || key === "description") {
+                    text.push(item[key]);
+                    setSomething = true;
+                }
+                else if (key === "checkboxes") {
+                    if (typeof (item[key]) === 'string')
+                        checkboxes.push(item[key]);
+                    else
+                        checkboxes.push(...item[key]);
+                    setSomething = true;
+                }
+                else if (key === "title") {
+                    title = item[key];
+                    setSomething = true;
+                }
+                else if (key === "duration") { //formats the time
+                    duration = "";
+                    if (item[key]["hours"] !== undefined)
+                        duration += item[key]["hours"] + ":";
+                    else
+                        duration += "00:";
+    
+                    if (item[key]["minutes"])
+                        duration += item[key]["minutes"] + ":";
+                    else
+                        duration += "00:";
+    
+                    if (item[key]["seconds"])
+                        duration += item[key]["seconds"];
+                    else
+                        duration += "00";
+                    setSomething = true;
+                }
+                else if (key === "caution") {
+                    caution = item[key];
+                    setSomething = true;
+                }
+                else if (key === "warning") {
+                    warning = item[key];
+                    setSomething = true;
+                }
+                else if (key === "substeps") {
+                    item[key].forEach(substep => text.push(substep.step));
+                    setSomething = true;
+                }
+            }
+        });
+        if (!setSomething)
+            return { step: undefined, images };
+        else
+            return {
+                step: {
+                    text,
+                    checkboxes,
+                    title,
+                    duration,
+                    caution,
+                    warning
+                }, images
+            };
+    }
