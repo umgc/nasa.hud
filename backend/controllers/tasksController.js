@@ -7,9 +7,6 @@ var taskCounter = 0;
 // Function to get tasks from procedure file for role selected by actor
 exports.get_tasks = function(req, res) {
     var response = [];
-    var actorKey; 
-    var actorName; 
-   
     try {
         const file = yaml.safeLoad(fs.readFileSync(procDir+req.params.filename, "utf8"));
         for(const obj of file.tasks) {
