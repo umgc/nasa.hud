@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:alpine
 
 COPY nginx.config /etc/nginx/conf.d/default.conf
-COPY index.html /usr/share/nginx/html
+COPY . /usr/share/nginx/html
