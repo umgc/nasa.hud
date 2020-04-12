@@ -1,4 +1,4 @@
-![Test/Deploy Staging Workflow Status](https://github.com/umgc/umgc.city.frontend/workflows/Test/Deploy%20UMGC%20City%20Web/badge.svg)
+![Test/Deploy Staging Workflow Status](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CI/badge.svg)
 ![Test/Deploy Release Workflow Status](https://github.com/umgc/umgc.city.frontend/workflows/Test/Deploy%20UMGC%20City%20Web/badge.svg)
 ![Sonarcloud Status - Server](https://sonarcloud.io/api/project_badges/measure?project=nasa.hud.server&metric=coverage)
 ![Sonarcloud Status - Client](https://sonarcloud.io/api/project_badges/measure?project=nasa.hud.client&metric=coverage)
