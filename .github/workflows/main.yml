@@ -48,16 +48,18 @@ jobs:
       
     - name: SonarCloud Scan Server
       uses: SonarSource/sonarcloud-github-action@v1.1
+      continue-on-error: true
       with:
-        projectBaseDir: backend
+        projectBaseDir: ./backend
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.NASA_SONAR }}
    
     - name: SonarCloud Scan Client
       uses: SonarSource/sonarcloud-github-action@v1.1
+      continue-on-error: true
       with:
-        projectBaseDir: frontend
+        projectBaseDir: './frontend'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.NASA_SONAR }}
