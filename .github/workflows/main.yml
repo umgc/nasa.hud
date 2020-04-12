@@ -37,13 +37,14 @@ jobs:
       uses: actions/setup-node@v1
     
     - name: Install modules
-      working-directory: ./backend/
+      working-directory: backend/
       run: |
         npm ci
         npm run test
+        echo backend/.coverage/lcov.info
         
     - name: fix code coverage paths
-      working-directory: ./backend/.coverage
+      working-directory: backend/.coverage
       run: sed -i 's/\/home\/runner\/work\/nasa.hud\/nasa.hud\//\/github\/workspace\//g' lcov.info
       
     - name: SonarCloud Scan
