@@ -41,7 +41,7 @@ jobs:
       run: |
         npm ci
         npm run test
-        echo "$(cat backend/.coverage/lcov.info)"
+        echo "$(cat .coverage/lcov.info)"
         
     - name: fix code coverage paths
       working-directory: backend/.coverage
