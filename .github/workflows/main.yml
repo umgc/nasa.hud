@@ -38,9 +38,10 @@ jobs:
     
     - name: Install modules
       working-directory: ./backend/
-    - run: npm ci
-    - run: npm run test
-    
+      run: |
+        npm ci
+        npm run test
+        
     - name: fix code coverage paths
       working-directory: ./backend/.coverage
       run: sed -i 's/\/home\/runner\/work\/nasa.hud\/nasa.hud\//\/github\/workspace\//g' lcov.info
