@@ -1,5 +1,8 @@
 var mainWindow = {
 
+    //urlprefix: "http://54.242.219.254:3000",
+    urlprefix: "",
+
     steps: [],
     images: [],
     imagePages: [],
@@ -8,14 +11,20 @@ var mainWindow = {
     voiceControl: undefined,
     currentProcedure : undefined,
 
-    mission: {},
+    mission: [],
+    roles: [],
 
     init: function () {
-
-        $.get("mission.json")
+        console.log(mainWindow.urlprefix + "/hud/api/getFiles");
+        $.get({
+            url: mainWindow.urlprefix + "/hud/api/getFiles",
+            dataType : "JSON"
+        })
             .fail(function (error) {
                 console.log(error);
                 alert("Failed to download mission data");
+                console.log("herE");
+
             })
             .done(function (data) {
                 mainWindow.mission = data;
@@ -31,11 +40,14 @@ var mainWindow = {
         mainWindow.voiceControl.addCommand("maestro next image page", mainWindow.nextImagePage);
         mainWindow.voiceControl.addCommand("maestro previous image page", mainWindow.previousImagePage);
         mainWindow.voiceControl.addCommand("maestro show image ${thing}", mainWindow.showImage);
-        mainWindow.voiceControl.addCommand("maestro select procedure ${procedureNumber}", mainWindow.selectRole);
+        mainWindow.voiceControl.addCommand("maestro select procedure ${procedureNumber}", mainWindow.downloadRoles);
         mainWindow.voiceControl.addCommand("maestro select role ${roleNumber}", mainWindow.downloadSteps);
         mainWindow.voiceControl.addCommand("maestro select roll ${roleNumber}", mainWindow.downloadSteps);
         mainWindow.voiceControl.addCommand("maestro select troll ${roleNumber}", mainWindow.downloadSteps);
         mainWindow.voiceControl.addCommand("maestro select row ${roleNumber}", mainWindow.downloadSteps);
+        mainWindow.voiceControl.addCommand("maestro toggle checkbox ${checkboxNumber}", mainWindow.toggleCheckbox);
+        mainWindow.voiceControl.addCommand("maestro toggle check box ${checkboxNumber}", mainWindow.toggleCheckbox);
+        mainWindow.voiceControl.addCommand("maestro help", mainWindow.displayHelp);
 
         try {
             mainWindow.voiceControl.start();
@@ -80,27 +92,44 @@ var mainWindow = {
         html += ' <p class="card-text">Please say &quot;maestro select procedure&quot; and the procedure number to continue</p >';
 
         for (var i = 0; i < mainWindow.mission.length; i++)
-            html += '<p>Procedure ' + ( i + 1 )+ ' : ' + mainWindow.mission[i].name + '</p>';
+            html += '<p>Procedure ' + ( i + 1 )+ ' : ' + mainWindow.mission[i] + '</p>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
         $('#mainwindow').html(html);
     },
 
-    selectRole: function (voiceInput) {
-
+    downloadRoles: function (voiceInput) {
         var word = voiceInput.procedureNumber;
         var number = mainWindow.wordToNumber(word);
-
         mainWindow.currentProcedure = mainWindow.mission[number - 1];
+
+        $.get({
+            url : mainWindow.urlprefix + "/hud/api/roles/" + mainWindow.currentProcedure,
+            dataType: "JSON"
+        })
+            .fail(function (error) {
+                console.log(error);
+                alert("Failed to download mission data");
+            })
+            .done(function (data) {
+                mainWindow.roles = data;
+                mainWindow.selectRole();
+            });
+    },
+
+    selectRole: function () {
+
+
+
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
         html += '<h5 class="card-title">Role Select</h5>';
         html += ' <p class="card-text">Please say &quot;maestro select role&quot; and the role number to continue</p >';
 
-        for (var i = 0; i < mainWindow.currentProcedure.roles.length; i++)
-            html += '<p>Role ' + (i + 1) + ' : ' + mainWindow.currentProcedure.roles[i] + '</p>';
+        for (var i = 0; i < mainWindow.roles.length; i++)
+            html += '<p>Role ' + (i + 1) + ' : ' + mainWindow.roles[i] + '</p>';
 
         html += '</div>';
         html += '</div>';
@@ -110,17 +139,20 @@ var mainWindow = {
 
     downloadSteps: function (voiceInput) {
         var roleNumber = mainWindow.wordToNumber(voiceInput.roleNumber);
-        var roleName = mainWindow.currentProcedure.roles[roleNumber - 1];
-
-        var url = mainWindow.currentProcedure.name + "/" + roleName + ".json";
-        console.log("url>" + url);
-        $.get(url)
+        var roleName = mainWindow.roles[roleNumber - 1];
+        var stepurl = mainWindow.urlprefix + "/hud/api/tasks/" + mainWindow.currentProcedure + "/" + roleName;
+        $.get({
+            url: stepurl,
+            dataType: "JSON"
+        })
             .fail(function (error) {
                 console.log(error);
-                alert("Could not download steps");
-
+                alert("Failed to download step data");
             })
-            .done(mainWindow.start);
+            .done(function (data) {
+                mainWindow.start(data);
+            });
+
 
     },
 
@@ -157,13 +189,35 @@ var mainWindow = {
         return undefined;
     },
 
+    displayHelp: function () {
+        var html = '<div class="container-fuild">';
+        html += '<div class="card">';
+        html += '<div class="card-body">';
+        html += '<h5 class="card-title">NASA HUD Voice Command</h5 >';
+        html += '<p class="card-text">maestro next step</p>';
+        html += '<p class="card-text">maestro previous step</p>';
+        html += '<p class="card-text">maestro go home</p>';
+        html += '<p class="card-text">maestro back to step</p>';
+        html += '<p class="card-text">maestro next image page</p>';
+        html += '<p class="card-text">maestro previous image page</p>';
+        html += '<p class="card-text">maestro show image #</p>';
+        html += '<p class="card-text">maestro select procedure #</p>';
+        html += '<p class="card-text">maestro select role #</p>';
+        html += '<p class="card-text">maestro toggle checkbox #</p>';
+        html += '<p class="card-text">maestro help</p>';
+
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        $('#mainwindow').html(html);
+    },
+
+
     displayImage: function (stepName) {
         var imageData  = mainWindow.getFromName(mainWindow.images, stepName);
 
         var html = '<div class="container-fuild">';
-        html += '<img src="' + imageData.url + '" class="img-fluid" alt="...">'
-        html += "</br>";
-        html += mainWindow.slideInBackToStep();
+        html += '<img src="' + imageData + '" class="img-fluid" alt="...">'
         html += '</div>';
         $('#mainwindow').html(html);
     },
@@ -187,24 +241,16 @@ var mainWindow = {
         return html;
     },
 
-    slideInBackToStep: function () {
-        var html = "</div>";
-        html += '<div class="card-body">';
-
-        html += "<button type='button' class='btn btn-secondary' onclick=\"mainWindow.display('" + mainWindow.currentStepName + "')\" > Back to Step</button > ";
-        html += "</div>";
-        html += '<div class="card-body">';
-        return html; 
-    },
-
     
 
 
     linkSteps: function (steps) {
+        for (var i = 0; i < steps.length; i++)
+            $.extend(steps[i], { name: "step_" + i });
         for (var i = 0; i < steps.length; i++) {
             $.extend(steps[i], i === 0 ? undefined : { previousStepName: steps[i - 1].name });
             $.extend(steps[i], i + 1 === steps.length ? undefined : { nextStepName: steps[i + 1].name });
-            $.extend(steps[i], { stepNunmber : i });
+            $.extend(steps[i], { stepNumber : i });
 
         }
     },
@@ -315,23 +361,26 @@ var mainWindow = {
 
         var html = '<div class="card">';
 
-        if (stepData.danger !== undefined) {
+        if (stepData.warning.length > 0) {
             html += '<div class="card-header alert-danger">';
-            html += stepData.danger;
+            html += stepData.warning;
             html += '</div>';
         }
 
-        if (stepData.alert !== undefined) {
+        if (stepData.caution.length > 0) {
             html += '<div class="card-header alert-warning">';
-            html += stepData.alert;
+            html += stepData.caution;
             html += '</div>';
         }
 
         html += '<div class="card-body">';
         html += '<h5 class="card-title">' + stepData.title + '</h5 >';
 
+        if (stepData.duration.length > 0)
+            html += '<h4 class="card-title">Duration' + stepData.duration + '</h4 >';
 
-        html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
+        if (stepData.text.length > 0)
+            html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
         html += mainWindow.slideInCheckboxes(stepData);
         html += '</div>';
         html += '</div>';
@@ -375,25 +424,25 @@ var mainWindow = {
             html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][1] !== "") {
                 html += '<div>1</div>';
-                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][1].url + '" class="img-fluid mb-4" alt="">';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][1] + '" class="img-fluid mb-4" alt="">';
             }
             html += '</div>';
             html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][2] !== "") {
                 html += '<div>2</div>';
-                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][2].url + '" class="img-fluid mb-4" alt="">';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][2] + '" class="img-fluid mb-4" alt="">';
             }
             html += '</div>';
             html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][3] !== "") {
                 html += '<div>3</div>';
-                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][3].url + '" class="img-fluid mb-4" alt="">';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][3] + '" class="img-fluid mb-4" alt="">';
             }
             html += '</div>';
             html += '<div class="col">';
             if (mainWindow.imagePages[mainWindow.currentImagePage][0] !== "") {
                 html += '<div>4</div>';
-                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][0].url + '" class="img-fluid mb-4" alt="">';
+                html += '<img src="' + mainWindow.imagePages[mainWindow.currentImagePage][0] + '" class="img-fluid mb-4" alt="">';
             }
             html += '</div>';
             html += '</div>';
@@ -412,9 +461,17 @@ var mainWindow = {
             mainWindow.nextStep();
         else if (event.keyCode === 37)
             mainWindow.previousStep();
+    },
+
+    toggleCheckbox: function (voiceInput) {
+
+        var stepData = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
+
+        var checkboxNumber = mainWindow.wordToNumber(voiceInput.checkboxNumber) - 1;
+
+        var checkbox = $('#' + stepData.stepNumber + "_" + checkboxNumber);
+        checkbox.prop("checked", !checkbox.prop("checked"));
     }
-
-
 
     /*
 
