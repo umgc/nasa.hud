@@ -50,7 +50,7 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1.1
       continue-on-error: true
       with:
-        projectBaseDir: ./backend
+        projectBaseDir: 'backend'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.NASA_SONAR }}
@@ -59,11 +59,10 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1.1
       continue-on-error: true
       with:
-        projectBaseDir: './frontend'
+        projectBaseDir: '/frontent'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.NASA_SONAR }}
-
 
   deploy-docker-client:
       if: contains(github.ref, 'refs/tags/v')
