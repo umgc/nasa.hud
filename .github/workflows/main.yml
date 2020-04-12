@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: UMGC FRONTEND CI
+name: NASA HUD CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -34,23 +34,25 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Use Node.js 
+      working-directory: ./backend/
       uses: actions/setup-node@v1
       
     - run: npm ci
     - run: npm run test
     
     - name: fix code coverage paths
-      working-directory: ./coverage
-      run: sed -i 's/\/home\/runner\/work\/umgc.city.frontend\/umgc.city.frontend\//\/github\/workspace\//g' lcov.info
+      working-directory: ./backend/.coverage
+      run: sed -i 's/\/home\/runner\/work\/nasa.hud\/nasa.hud\//\/github\/workspace\//g' lcov.info
       
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.CITY_FRONTEND_SONAR }}
+        SONAR_TOKEN: ${{ secrets.NASA_BACKEND_SONAR }}
 
-  deploy-docker:
+  deploy-docker-frontend:
       if: contains(github.ref, 'refs/tags/v')
+      working-directory: ./frontend/
       needs: build
       runs-on: ubuntu-latest    
       steps:
@@ -58,13 +60,29 @@ jobs:
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
         with:
-          name: umgccaps/umgc.city.frontend
+          name: umgccaps/nasa.hud.frontend
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tagging: true
+    
+  deploy-docker-backend:
+      if: contains(github.ref, 'refs/tags/v')
+      working-directory: ./backend/
+      needs: build
+      runs-on: ubuntu-latest    
+      steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: HurricanKai/Publish-Docker-Github-Action@master
+        with:
+          name: umgccaps/nasa.hud.backend
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tagging: true
        
-  deploy-heroku:
+  deploy-heroku-backend:
         if: contains(github.ref, 'refs/tags/v')
+        working-directory: ./frontend/
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -72,15 +90,36 @@ jobs:
         - name: Login to Heroku Container registry
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_BACKEND_NAME }}
           run: heroku container:login 
         - name: Build and push
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+          run: heroku web container:push -a ${{ secrets.HEROKU_APP_BACKEND_NAME }}  
         - name: Release
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web 
+          run: heroku web container:release -a ${{ secrets.HEROKU_APP_BACKEND_NAME }} 
+
+  deploy-heroku-frontend:
+        if: contains(github.ref, 'refs/tags/v')
+        working-directory: ./frontend/
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v1
+        - name: Login to Heroku Container registry
+          env: 
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_FRONTEND_NAME }}
+              run: heroku container:login 
+            - name: Build and push
+              env:
+                HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+              run: heroku web container:push -a ${{ secrets.HEROKU_APP_FRONTEND_NAME }}  
+            - name: Release
+              env:
+                HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+              run: heroku web container:release -a ${{ secrets.HEROKU_APP_FRONTEND_NAME }} 
     
     

@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node app.js",
     "devstart": "nodemon app.js",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary ava",
     "test": "nyc --reporter=lcov --reporter=text-summary --report-dir=.coverage mocha --exit "
   },
   "dependencies": {
