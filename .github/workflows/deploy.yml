@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: UMGC CITY WEBAPP CD
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ release ]
+    tags:
+      - '*'
+
+# A workflow run is\made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy-docker:
+      if: contains(github.ref, 'refs/tags/v')
+      needs: build
+      runs-on: ubuntu-latest    
+      steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: HurricanKai/Publish-Docker-Github-Action@master
+        with:
+          name: umgccaps/umgc.city.frontend
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tagging: true
+       
+  deploy-heroku:
+        if: contains(github.ref, 'refs/tags/v')
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v1
+        - name: Login to Heroku Container registry
+          env: 
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          run: heroku container:login 
+        - name: Build and push
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+        - name: Release
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web 
+    
+    

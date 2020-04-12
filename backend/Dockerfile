@@ -1,4 +1,6 @@
-FROM node:10
+FROM node:alpine
+
+ENV PORT 8081
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,10 +10,14 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
-
 # Bundle app source
-COPY . .
+RUN npm install --production
 
-EXPOSE 3000
-CMD [ "node", "app.js" ]
+COPY ./assets assets/
+COPY ./controllers controllers/
+COPY ./routes routes/
+COPY ./app.js .
+
+EXPOSE ${PORT}
+
+CMD ["node", "app.js" ]

@@ -1,7 +1,5 @@
-var express = require ('express');
+var express = require('express');
 var router = express.Router();
-var path = require('path');
-var appRoot = require('app-root-path');
 
 var file_controller = require('../controllers/filesController');
 var roles_controller = require('../controllers/rolesController');
@@ -13,8 +11,8 @@ router.get('/roles/:filename', roles_controller.get_roles);
 router.get('/tasks/:filename/:role', tasks_controller.get_tasks);
 router.get('/getimage/:filename', file_controller.get_image);
 
-router.get('/', function(req, res) {
-    res.status(200).sendFile(path.join(appRoot + path.normalize('/assets/images/maestro-hud-logo.png')));
-})
+router.get('/', function (req, res) {
+  res.status(200).json({ message: 'hello world' });
+});
 
 module.exports = router;
