@@ -34,9 +34,10 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Use Node.js 
-      working-directory: ./backend/
       uses: actions/setup-node@v1
-      
+    
+    - name: Install modules
+      working-directory: ./backend/
     - run: npm ci
     - run: npm run test
     
@@ -52,7 +53,6 @@ jobs:
 
   deploy-docker-client:
       if: contains(github.ref, 'refs/tags/v')
-      working-directory: ./frontend/
       needs: build
       runs-on: ubuntu-latest    
       steps:
@@ -63,11 +63,11 @@ jobs:
           name: umgccaps/nasa.hud.client.dev
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tagging: true
-    
+          snapshot: true
+          workdir: backend
+ 
   deploy-docker-server:
       if: contains(github.ref, 'refs/tags/v')
-      working-directory: ./backend/
       needs: build
       runs-on: ubuntu-latest    
       steps:
@@ -78,11 +78,11 @@ jobs:
           name: umgccaps/nasa.hud.server.dev
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tagging: true
+          snapshot: true
+          workdir: backend
        
   deploy-heroku-server:
         if: contains(github.ref, 'refs/tags/v')
-        working-directory: ./frontend/
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -95,15 +95,16 @@ jobs:
         - name: Build and push
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          working-directory: ./backend/
           run: heroku web container:push -a ${{ secrets.HEROKU_APP_SERVER_DEV_NAME }}  
         - name: Release
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          working-directory: ./backend/          
           run: heroku web container:release -a ${{ secrets.HEROKU_APP_SERVER_DEV_NAME }} 
 
   deploy-heroku-client:
         if: contains(github.ref, 'refs/tags/v')
-        working-directory: ./frontend/
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -112,14 +113,16 @@ jobs:
           env: 
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
             HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}
-              run: heroku container:login 
-            - name: Build and push
-              env:
-                HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-              run: heroku web container:push -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}  
-            - name: Release
-              env:
-                HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-              run: heroku web container:release -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }} 
+          run: heroku container:login 
+        - name: Build and push
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          working-directory: ./frontend/
+          run: heroku web container:push -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}  
+        - name: Release
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          working-directory: ./frontend/          
+          run: heroku web container:release -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }} 
     
     
