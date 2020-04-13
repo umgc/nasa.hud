@@ -61,7 +61,8 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
-        env: BASE_PATH './frontend'
+        env: 
+          BASE_PATH: './frontend'
         with:
           name: umgccaps/nasa.hud.client.dev
           username: ${{ secrets.DOCKER_USER }}
@@ -76,7 +77,8 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
-        env: BASE_PATH './backend'
+        env: 
+          BASE_PATH: './backend'
         with:
           name: umgccaps/nasa.hud.server.dev
           username: ${{ secrets.DOCKER_USER }}
