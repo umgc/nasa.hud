@@ -17,7 +17,7 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: umgccaps/nasa.hud.client.dev
+          name: umgccaps/nasa.hud.client
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tagging: true
@@ -31,7 +31,7 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: umgccaps/nasa.hud.server.dev
+          name: umgccaps/nasa.hud.server
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tagging: true

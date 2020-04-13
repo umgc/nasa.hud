@@ -37,5 +37,3 @@ publishes the application to the [NASA HUB Web](https://app-nasa-hudweb.herokuap
 ## Further help
 
 To get more help on the NASA HUD project visit the project documentation site at [Capstone Docs](https://1drv.ms/u/s!Aq84NT9YxlnRbqHR5Yb0sbBER6g?e=thSiKA).
-
-<iframe src="https://onedrive.live.com/embed?cid=D159C6583F3538AF&resid=D159C6583F3538AF%21110&authkey=AAAqUoTg0c_Bx5o" width="165" height="128" frameborder="0" scrolling="no"></iframe>
