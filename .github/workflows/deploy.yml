@@ -5,14 +5,14 @@ name: NASA HUD CD
 # events but only for the master branch
 on:
   push:
-    branches: [ release ]
+    branches: [release]
     tags:
       - '*'
 jobs:
   deploy-docker-client:
-      if: contains(github.ref, 'refs/tags/v')
-      runs-on: ubuntu-latest    
-      steps:
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
@@ -22,11 +22,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tagging: true
           workdir: backend
- 
+
   deploy-docker-server:
-      if: contains(github.ref, 'refs/tags/v')
-      runs-on: ubuntu-latest    
-      steps:
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
@@ -36,45 +36,45 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tagging: true
           workdir: backend
-       
+
   deploy-heroku-server:
-        if: contains(github.ref, 'refs/tags/v')
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v1
-        - name: Login to Heroku Container registry
-          env: 
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_SERVER_NAME }}
-          run: heroku container:login 
-        - name: Build and push
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          working-directory: ./backend/
-          run: heroku web container:push -a ${{ secrets.HEROKU_APP_SERVER_NAME }}  
-        - name: Release
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          working-directory: ./backend/          
-          run: heroku web container:release -a ${{ secrets.HEROKU_APP_SERVER_NAME }} 
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_SERVER_NAME }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+        working-directory: ./backend/
+        run: heroku container:push web -a ${{ secrets.HEROKU_APP_SERVER_NAME }}
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+        working-directory: ./backend/
+        run: heroku container:release web -a ${{ secrets.HEROKU_APP_SERVER_NAME }}
 
   deploy-heroku-client:
-        if: contains(github.ref, 'refs/tags/v')
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v1
-        - name: Login to Heroku Container registry
-          env: 
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_CLIENT_NAME }}
-          run: heroku container:login 
-        - name: Build and push
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          working-directory: ./frontend/
-          run: heroku web container:push -a ${{ secrets.HEROKU_APP_CLIENT_NAME }}  
-        - name: Release
-          env:
-            HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          working-directory: ./frontend/          
-          run: heroku web container:release -a ${{ secrets.HEROKU_APP_CLIENT_NAME }}
+    if: contains(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_CLIENT_NAME }}
+        run: heroku container:login
+      - name: Build and push
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+        working-directory: ./frontend/
+        run: heroku container:push web -a ${{ secrets.HEROKU_APP_CLIENT_NAME }}
+      - name: Release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+        working-directory: ./frontend/
+        run: heroku container:release web -a ${{ secrets.HEROKU_APP_CLIENT_NAME }}

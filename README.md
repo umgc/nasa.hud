@@ -1,6 +1,7 @@
 ![Test/Deploy Staging Workflow Status](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CI/badge.svg)
 ![Test/Deploy Release Workflow Status](https://github.com/umgc/umgc.city.frontend/workflows/Test/Deploy%20UMGC%20City%20Web/badge.svg)
 ![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=umgc_nasa.hud&metric=coverage)
+
 ![Sonarcloud Quality](https://sonarcloud.io/api/project_badges/quality_gate?project=umgc_nasa.hud)
 
 # NASA HUD Web App
@@ -11,10 +12,7 @@ This project is mono repo that contains both frontend client and backend server 
 
 The application has automated testing hosted through Github Actions ... see .github/workflows for workflow actions.
 
-For Code Coverage Report view
-
-- [Sonar Dashboard Server](https://sonarcloud.io/dashboard?id=nasa.hud.server)
-- [Sonar Dashboard Client](https://sonarcloud.io/dashboard?id=nasa.hud.client)
+For Code Coverage Report view [Sonar Dashboard](https://sonarcloud.io/dashboard?id=umgc_nasa.hud)
 
 The project is staged at
 
