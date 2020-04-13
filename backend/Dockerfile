@@ -17,10 +17,10 @@ COPY ${BASE_PATH}/package*.json ./
 # Bundle app source
 RUN npm install --production
 
-COPY ${BASE_PATH}/backend/assets assets/
-COPY ${BASE_PATH}/backend/controllers controllers/
-COPY ${BASE_PATH}/backend/routes routes/
-COPY ${BASE_PATH}/backend/app.js .
+COPY ${BASE_PATH}/assets assets/
+COPY ${BASE_PATH}/controllers controllers/
+COPY ${BASE_PATH}/routes routes/
+COPY ${BASE_PATH}/app.js .
 
 EXPOSE ${PORT}
 
