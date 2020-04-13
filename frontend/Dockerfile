@@ -7,13 +7,13 @@ ENV BACKAPI 'https://www.example.com'
 RUN rm -rf /usr/share/nginx/html/*
 
 ## Copy our default nginx config
-COPY default.conf.template /etc/nginx/conf.d/default.conf.template
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY frontend/default.conf.template /etc/nginx/conf.d/default.conf.template
+COPY frontend/nginx.conf /etc/nginx/nginx.conf
 ## COPY ./dev/default.nginx.conf /etc/nginx/conf.d/
 ## COPY ./dev/nginx.conf /etc/nginx/conf.d/default.conf.template
 ## COPY ./dev/nginx.conf /etc/nginx/nginx.conf
 
-COPY . /usr/share/nginx/html
+COPY ./frontend /usr/share/nginx/html
 
 EXPOSE ${PORT}
 
