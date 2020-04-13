@@ -1,6 +1,9 @@
 var fs = require('fs');
+var path = require('path');
 var yaml = require('js-yaml');
-var procDir = './procedures/';
+var appRoot = require('app-root-path');
+var procDir = path.normalize('./assets/procedures/');
+var imageDir = path.normalize('/assets/images/');
 
 // Function to return list of all procedure files from the filesystem
 exports.get_files = function (req, res) {
@@ -23,9 +26,20 @@ exports.lint_file = function (req, res) {
         }
         // Handle invalid yaml files
         else {
-            res.status(420).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
-            console.log(e);
+            res.status(422).send({"error": "The selected procedure file is unreadable. Please ensure the format and file type (.yml) are correct."});
         }
     }
     res.status(200).send(response);
+}
+
+exports.get_image = function (req, res) {
+    // express sendFile requires absolute path so using app-root-path module to get root and prepending it
+    var file = appRoot + imageDir + req.params.filename;
+    res.status(200).sendFile(file, function (err) {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                res.status(404).send({"error": "The requested image file does not exist. Please try again."});
+            }
+        }
+    })
 }
