@@ -1,9 +1,7 @@
 ![Test/Deploy Staging Workflow Status](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CI/badge.svg)
 ![Test/Deploy Release Workflow Status](https://github.com/umgc/umgc.city.frontend/workflows/Test/Deploy%20UMGC%20City%20Web/badge.svg)
-![Sonarcloud Status - Server](https://sonarcloud.io/api/project_badges/measure?project=nasa.hud.server&metric=coverage)
-![Sonarcloud Status - Client](https://sonarcloud.io/api/project_badges/measure?project=nasa.hud.client&metric=coverage)
-![Sonarcloud Quality - Server](https://sonarcloud.io/api/project_badges/quality_gate?project=nasa.hud.server)
-![Sonarcloud Quality - Client](https://sonarcloud.io/api/project_badges/quality_gate?project=nasa.hud.client)
+![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=umgc_nasa.hud&metric=coverage)
+![Sonarcloud Quality](https://sonarcloud.io/api/project_badges/quality_gate?project=umgc_nasa.hud)
 
 # NASA HUD Web App
 

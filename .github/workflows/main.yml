@@ -55,7 +55,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.NASA_SONAR }}
 
   deploy-docker-client:
-      if: contains(github.ref, 'refs/tags/v')
       needs: build
       runs-on: ubuntu-latest    
       steps:
@@ -70,7 +69,6 @@ jobs:
           workdir: backend
  
   deploy-docker-server:
-      if: contains(github.ref, 'refs/tags/v')
       needs: build
       runs-on: ubuntu-latest    
       steps:
@@ -85,7 +83,6 @@ jobs:
           workdir: backend
        
   deploy-heroku-server:
-        if: contains(github.ref, 'refs/tags/v')
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -107,7 +104,6 @@ jobs:
           run: heroku web container:release -a ${{ secrets.HEROKU_APP_SERVER_DEV_NAME }} 
 
   deploy-heroku-client:
-        if: contains(github.ref, 'refs/tags/v')
         needs: build
         runs-on: ubuntu-latest
         steps:
