@@ -66,6 +66,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: true
+          dockerfile: frontend/Dockerfile
           workdir: frontend
           context: frontend
 
@@ -81,6 +82,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: true
+          dockerfile: backend/Dockerfile
           workdir: backend
           context: backedn
 
