@@ -61,6 +61,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
+        env: BASE_PATH './frontend'
         with:
           name: umgccaps/nasa.hud.client.dev
           username: ${{ secrets.DOCKER_USER }}
@@ -75,6 +76,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: HurricanKai/Publish-Docker-Github-Action@master
+        env: BASE_PATH './backend'
         with:
           name: umgccaps/nasa.hud.server.dev
           username: ${{ secrets.DOCKER_USER }}
@@ -117,13 +119,9 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
         working-directory: ./frontend/
-        run: |
-          cd frontend
-          heroku container:push web -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}
+        run: heroku container:push web -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}
       - name: Release
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
         working-directory: ./frontend/
-        run: |
-          cd frontend 
-          heroku container:release web -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}
+        run: heroku container:release web -a ${{ secrets.HEROKU_APP_CLIENT_DEV_NAME }}
