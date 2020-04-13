@@ -67,7 +67,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: true
           dockerfile: frontend/Dockerfile
-          workdir: frontend
+          workdir: ./frontend/
 
   deploy-docker-server:
     needs: build
@@ -82,7 +82,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: true
           dockerfile: backend/Dockerfile
-          workdir: backend
+          workdir: ./backend/
 
   deploy-heroku-server:
     needs: build
