@@ -1,6 +1,7 @@
 FROM node:alpine
 
 ENV PORT 8081
+RUN echo "$PWD"
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,6 +9,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
+RUN echo "$PWD"
 COPY ./backend/package*.json ./
 
 # Bundle app source

@@ -5,7 +5,7 @@ ENV BACKAPI 'https://www.example.com'
 
 ## Remove default Nginx website
 RUN rm -rf /usr/share/nginx/html/*
-
+RUN echo "$PWD"
 ## Copy our default nginx config
 COPY frontend/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY frontend/nginx.conf /etc/nginx/nginx.conf
@@ -13,7 +13,7 @@ COPY frontend/nginx.conf /etc/nginx/nginx.conf
 ## COPY ./dev/nginx.conf /etc/nginx/conf.d/default.conf.template
 ## COPY ./dev/nginx.conf /etc/nginx/nginx.conf
 
-COPY ./frontend /usr/share/nginx/html
+COPY frontend/ /usr/share/nginx/html
 
 EXPOSE ${PORT}
 
