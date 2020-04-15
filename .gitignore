@@ -1,3 +1,4 @@
 ## Ignore node modules and package-lock.json
 /backend/node_modules
-/backend/.coverage
+/backend/.coverage/
+/backend/.nyc_output/
