@@ -1,7 +1,6 @@
 ![NASA HUD TEST](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20TEST/badge.svg)
 ![NASA HUD CI](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CI/badge.svg)
 ![NASA HUD CD](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CD/badge.svg)
-![Test/Deploy Release Workflow Status](https://github.com/umgc/nasa.hud/workflows/NASA%20HUD%20CD/badge.svg)
 ![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=umgc_nasa.hud&metric=coverage)
 
 ![Sonarcloud Quality](https://sonarcloud.io/api/project_badges/quality_gate?project=umgc_nasa.hud)
