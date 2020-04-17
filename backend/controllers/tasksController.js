@@ -2,7 +2,7 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 var procDir = './assets/procedures/';
 var taskDir = './assets/tasks/';
-var imageDir = './assets/images/';
+var imageDir = '/hud/api/getimage/';
 var taskCounter = 0;
 
 // Function to get tasks from procedure file for role selected by an actor
