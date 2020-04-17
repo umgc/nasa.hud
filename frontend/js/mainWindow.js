@@ -84,7 +84,9 @@ var mainWindow = {
 
 
     selectProcedure: function () {
-        
+        if (mainWindow.mission == undefined)
+            return;
+
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
@@ -100,6 +102,9 @@ var mainWindow = {
     },
 
     downloadRoles: function (voiceInput) {
+        if (mainWindow.mission === undefined)
+            return;
+
         var word = voiceInput.procedureNumber;
         var number = mainWindow.wordToNumber(word);
         mainWindow.currentProcedure = mainWindow.mission[number - 1];
@@ -120,7 +125,8 @@ var mainWindow = {
 
     selectRole: function () {
 
-
+        if (mainWindow.roles === undefined || mainWindow.roles.length === 0)
+            return;
 
         var html = '<div class="container">';
         html += '<div class="card">';
@@ -138,6 +144,10 @@ var mainWindow = {
     },
 
     downloadSteps: function (voiceInput) {
+
+        if (mainWindow.roles === undefined || mainWindow.roles.length === 0 || mainWindow.mission === undefined || mainWindow.currentProcedure === undefined)
+            return;
+
         var roleNumber = mainWindow.wordToNumber(voiceInput.roleNumber);
         var roleName = mainWindow.roles[roleNumber - 1];
         var stepurl = mainWindow.urlprefix + "/hud/api/tasks/" + mainWindow.currentProcedure + "/" + roleName;
@@ -226,7 +236,7 @@ var mainWindow = {
 
         if (stepData.checkboxes === undefined)
             return "";
-        var html = "</div>";
+
         html += '<div class="card-body">';
         html += stepData.checkboxes.reduce(function (output, item, idx) {
             var uid = stepData.stepNumber + '_' + idx;
@@ -237,7 +247,7 @@ var mainWindow = {
 
             return output;
         }, "");
-
+        var html = "</div>";
         return html;
     },
 
@@ -280,6 +290,9 @@ var mainWindow = {
 
     nextStep: function () {
 
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         console.log(currStep);
@@ -293,6 +306,10 @@ var mainWindow = {
     },
 
     previousStep: function () {
+
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         if (currStep.previousStepName === undefined)
@@ -333,6 +350,9 @@ var mainWindow = {
     },
 
     display: function (stepName) {
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var html = '<div class="container-fuild">';
         html += '<div class="row" style="margin-right:0px">';
 
@@ -379,12 +399,20 @@ var mainWindow = {
         if (stepData.duration.length > 0)
             html += '<h4 class="card-title">Duration' + stepData.duration + '</h4 >';
 
-        if (stepData.text.length > 0)
-            html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
+        if (stepData.text.length > 0) {
+            var shrink = stepData.text.length > 8;
+
+            html += stepData.text.reduce(function (output, item) {
+                var o = '<div class="card-text" ';
+                if (shrink)
+                    o += 'style="font-size:80%"';
+
+                return output += o + '>' + item + '</div>';
+            });
+        }
         html += mainWindow.slideInCheckboxes(stepData);
         html += '</div>';
         html += '</div>';
-
 
         return html;
     },
@@ -472,49 +500,6 @@ var mainWindow = {
         var checkbox = $('#' + stepData.stepNumber + "_" + checkboxNumber);
         checkbox.prop("checked", !checkbox.prop("checked"));
     }
-
-    /*
-
-
-
-
-
-
-
-    setup: function (role) {
-
-        mainWindow.role = role;
-
-        try {
-
-
-
-            mainWindow.voiceControl.addCommand("maestro next step", mainWindow.nextStep);
-            mainWindow.voiceControl.addCommand("maestro previous step", mainWindow.previousStep);
-
-            mainWindow.voiceControl.start();
-        }
-        catch (e) {
-            console.log(e);
-        }
-        
-
-        mainWindow.render();
-    },
-
-    render: function () {
-        console.log("Rendering step: " + mainWindow.step);
-        $.get(mainWindow.role + "/" + mainWindow.step + ".html", function (data) {
-            $('#mainwindow').html(data);
-        });
-
-
-    },
-
-
-
-
-    */
 };
 
 
