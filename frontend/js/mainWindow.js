@@ -247,7 +247,7 @@ var mainWindow = {
 
             return output;
         }, "");
-        var html = "</div>";
+        html += "</div>";
         return html;
     },
 
@@ -407,7 +407,7 @@ var mainWindow = {
                 if (shrink)
                     o += 'style="font-size:80%"';
 
-                return output += o + '>' + item + '</div>';
+                return output + o + '>' + item + '</div>';
             });
         }
         html += mainWindow.slideInCheckboxes(stepData);
