@@ -237,6 +237,8 @@ var mainWindow = {
         if (stepData.checkboxes === undefined)
             return "";
 
+        var html = "";
+
         html += '<div class="card-body">';
         html += stepData.checkboxes.reduce(function (output, item, idx) {
             var uid = stepData.stepNumber + '_' + idx;
