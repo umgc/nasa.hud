@@ -33,7 +33,20 @@ publishes the application to the [NASA HUB Web](https://app-nasa-hudweb.herokuap
 
 ## Running unit tests
 
-- Requires DEV to update
+Both the frontend and backend projects utilize the mocha testing framework in conjunction with testing tools like chai and sinon. To run these unit tests, first ensure that all dependencies have been installed to the local machine. To install project dependencies, run the following:
+
+```javascript
+npm install
+```
+
+Once the dependencies are installed, the unit tests can be executed by running the following commands:
+
+```javascript
+nasa.hud\frontend\ $ npm run test
+nasa.hud\backend\ $ npm run test
+```
+
+In addition to executing the unit tests, the coverage report will be generated and displayed in the console.
 
 ## Further help
 
