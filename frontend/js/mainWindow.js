@@ -115,7 +115,7 @@ var mainWindow = {
         })
             .fail(function (error) {
                 console.log(error);
-                alert("Failed to download mission data");
+                mainWindow.displayError("Failed to download role data");
             })
             .done(function (data) {
                 mainWindow.roles = data;
@@ -157,7 +157,7 @@ var mainWindow = {
         })
             .fail(function (error) {
                 console.log(error);
-                alert("Failed to download step data");
+                mainWindow.displayError("Failed to download step data");
             })
             .done(function (data) {
                 mainWindow.start(data);
@@ -167,6 +167,12 @@ var mainWindow = {
     },
 
     start: function (data) {
+
+        if (data.steps.length === 0) {
+            mainWindow.displayError("No steps available for this role");
+            return;
+        }
+
 
         mainWindow.steps = [];
         mainWindow.images = [];
@@ -178,6 +184,10 @@ var mainWindow = {
         console.log(data);
         mainWindow.images = data.images;
         mainWindow.steps = data.steps;
+
+
+
+
         mainWindow.linkSteps(mainWindow.steps);
         mainWindow.splitImagesIntoPages();
 
@@ -407,7 +417,7 @@ var mainWindow = {
             html += stepData.text.reduce(function (output, item) {
                 var o = '<div class="card-text" ';
                 if (shrink)
-                    o += 'style="font-size:80%"';
+                    o += 'style="font-size:50%"';
 
                 return output + o + '>' + item + '</div>';
             });
@@ -501,8 +511,31 @@ var mainWindow = {
 
         var checkbox = $('#' + stepData.stepNumber + "_" + checkboxNumber);
         checkbox.prop("checked", !checkbox.prop("checked"));
+    },
+
+    displayError: function (message) {
+
+        var html = '<div class="container-fuild">';
+        html += '<div class="row" style="margin-right:0px">';
+
+        html += '<div class="col">';
+            html += '<div class="card">';
+            html += '<div class="card-body">';
+            html += '<h5 class="card-title alert-danger" >Error</h5 >';
+            html += '<div class="card-text">' + message + '</div>';
+            html += '<div class="card-text">Please say &quotMaestro go home&quot to start over.</div>';
+            html += '</div>';
+            html += '</div>';
+        html += '</div>';
+        html += '</div>';
+     
+            html += '</div>';
+            html += '</div>';
+        console.log(html);
+        $('#mainwindow').html(html);
     }
 };
+
 
 
 
