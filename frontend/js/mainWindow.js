@@ -84,7 +84,7 @@ var mainWindow = {
 
 
     selectProcedure: function () {
-        if (mainWindow.mission == undefined)
+        if (mainWindow.mission === undefined)
             return;
 
         var html = '<div class="container">';
