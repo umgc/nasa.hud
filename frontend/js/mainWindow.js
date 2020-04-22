@@ -233,11 +233,11 @@ var mainWindow = {
     },
 
 
-    displayImage: function (stepName) {
-        var imageData  = mainWindow.getFromName(mainWindow.images, stepName);
+    displayImage: function (imageName) {
+        var imageData = mainWindow.getFromName(mainWindow.images, imageName);
 
         var html = '<div class="container-fuild">';
-        html += '<img src="' + imageData + '" class="img-fluid" alt="...">'
+        html += '<img src="' + imageData + '" class="img-fluid" width="100%" alt="...">'
         html += '</div>';
         $('#mainwindow').html(html);
     },
@@ -339,6 +339,8 @@ var mainWindow = {
     },
 
     nextImagePage: function () {
+        if (mainWindow.imagePages.length === 0)
+            return;
 
         if (mainWindow.currentImagePage < mainWindow.imagePages.length)
             mainWindow.currentImagePage++;
@@ -348,6 +350,9 @@ var mainWindow = {
     },
 
     previousImagePage: function () {
+
+        if (mainWindow.imagePages.length === 0)
+            return;
 
         if (mainWindow.currentImagePage > 0)
             mainWindow.currentImagePage--;
