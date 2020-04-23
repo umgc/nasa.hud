@@ -77,9 +77,9 @@ var mainWindow = {
         var word = input.thing;
         var number = mainWindow.wordToNumber(word);
         if (number !== 4)
-            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][number].name);
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][number]);
         else
-            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0].name);
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0]);
     },
 
 
@@ -177,6 +177,7 @@ var mainWindow = {
         mainWindow.steps = [];
         mainWindow.images = [];
         mainWindow.imagePages = [];
+
         mainWindow.currentStepName = undefined;
         mainWindow.currentImagePage = 0;
 
@@ -233,11 +234,10 @@ var mainWindow = {
     },
 
 
-    displayImage: function (imageName) {
-        var imageData = mainWindow.getFromName(mainWindow.images, imageName);
+    displayImage: function (imageUrl) {
 
         var html = '<div class="container-fuild">';
-        html += '<img src="' + imageData + '" class="img-fluid" width="100%" alt="...">'
+        html += '<img src="' + imageUrl + '" class="img-fluid" width="100%" alt="...">'
         html += '</div>';
         $('#mainwindow').html(html);
     },
