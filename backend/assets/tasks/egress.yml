@@ -11,7 +11,16 @@ roles:
 steps:
   - IV + crewA + crewB:
       - images:
-          - path: new-st-config.png
+          - path: new-st-config00.png
+          - path: new-st-config01.png
+          - path: new-st-config02.png
+          - path: new-st-config03.png
+          - path: new-st-config04.png
+          - path: new-st-config05.png
+          - path: new-st-config06.png
+          - path: new-st-config07.png
+          - path: new-st-config08.png
+          - path: new-st-config09.png
   - simo:
       IV:
         - text: 'Record PET start time ____:____ (Pwr to Batt)'
