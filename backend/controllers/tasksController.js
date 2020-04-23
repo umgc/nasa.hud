@@ -2,6 +2,7 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 var procDir = './assets/procedures/';
 var taskDir = './assets/tasks/';
+var imageDir = '/hud/api/getimage/';
 var taskCounter = 0;
 
 // Function to get tasks from procedure file for role selected by an actor
@@ -161,7 +162,7 @@ var get_steps = function(filename, role) {
         stepInput.forEach(function (item) {
             for (key in item) {
                 if (key === "images") {
-                    images.push(...item[key].map(function (value) { return value.path;}));
+                    images.push(...item[key].map(function (value) { return imageDir+value.path;}));
                 }
                 else if (key === "step" || key === "text" || key === "description") {
                     text.push(item[key]);

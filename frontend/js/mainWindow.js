@@ -77,14 +77,16 @@ var mainWindow = {
         var word = input.thing;
         var number = mainWindow.wordToNumber(word);
         if (number !== 4)
-            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][number].name);
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][number]);
         else
-            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0].name);
+            mainWindow.displayImage(mainWindow.imagePages[mainWindow.currentImagePage][0]);
     },
 
 
     selectProcedure: function () {
-        
+        if (mainWindow.mission === undefined)
+            return;
+
         var html = '<div class="container">';
         html += '<div class="card">';
         html += '<div class="cardbody">';
@@ -100,6 +102,9 @@ var mainWindow = {
     },
 
     downloadRoles: function (voiceInput) {
+        if (mainWindow.mission === undefined)
+            return;
+
         var word = voiceInput.procedureNumber;
         var number = mainWindow.wordToNumber(word);
         mainWindow.currentProcedure = mainWindow.mission[number - 1];
@@ -110,7 +115,7 @@ var mainWindow = {
         })
             .fail(function (error) {
                 console.log(error);
-                alert("Failed to download mission data");
+                mainWindow.displayError("Failed to download role data");
             })
             .done(function (data) {
                 mainWindow.roles = data;
@@ -120,7 +125,8 @@ var mainWindow = {
 
     selectRole: function () {
 
-
+        if (mainWindow.roles === undefined || mainWindow.roles.length === 0)
+            return;
 
         var html = '<div class="container">';
         html += '<div class="card">';
@@ -138,6 +144,10 @@ var mainWindow = {
     },
 
     downloadSteps: function (voiceInput) {
+
+        if (mainWindow.roles === undefined || mainWindow.roles.length === 0 || mainWindow.mission === undefined || mainWindow.currentProcedure === undefined)
+            return;
+
         var roleNumber = mainWindow.wordToNumber(voiceInput.roleNumber);
         var roleName = mainWindow.roles[roleNumber - 1];
         var stepurl = mainWindow.urlprefix + "/hud/api/tasks/" + mainWindow.currentProcedure + "/" + roleName;
@@ -147,7 +157,7 @@ var mainWindow = {
         })
             .fail(function (error) {
                 console.log(error);
-                alert("Failed to download step data");
+                mainWindow.displayError("Failed to download step data");
             })
             .done(function (data) {
                 mainWindow.start(data);
@@ -158,9 +168,16 @@ var mainWindow = {
 
     start: function (data) {
 
+        if (data.steps.length === 0) {
+            mainWindow.displayError("No steps available for this role");
+            return;
+        }
+
+
         mainWindow.steps = [];
         mainWindow.images = [];
         mainWindow.imagePages = [];
+
         mainWindow.currentStepName = undefined;
         mainWindow.currentImagePage = 0;
 
@@ -168,6 +185,10 @@ var mainWindow = {
         console.log(data);
         mainWindow.images = data.images;
         mainWindow.steps = data.steps;
+
+
+
+
         mainWindow.linkSteps(mainWindow.steps);
         mainWindow.splitImagesIntoPages();
 
@@ -213,11 +234,10 @@ var mainWindow = {
     },
 
 
-    displayImage: function (stepName) {
-        var imageData  = mainWindow.getFromName(mainWindow.images, stepName);
+    displayImage: function (imageUrl) {
 
         var html = '<div class="container-fuild">';
-        html += '<img src="' + imageData + '" class="img-fluid" alt="...">'
+        html += '<img src="' + imageUrl + '" class="img-fluid" width="100%" alt="...">'
         html += '</div>';
         $('#mainwindow').html(html);
     },
@@ -226,7 +246,9 @@ var mainWindow = {
 
         if (stepData.checkboxes === undefined)
             return "";
-        var html = "</div>";
+
+        var html = "";
+
         html += '<div class="card-body">';
         html += stepData.checkboxes.reduce(function (output, item, idx) {
             var uid = stepData.stepNumber + '_' + idx;
@@ -237,7 +259,7 @@ var mainWindow = {
 
             return output;
         }, "");
-
+        html += "</div>";
         return html;
     },
 
@@ -280,6 +302,9 @@ var mainWindow = {
 
     nextStep: function () {
 
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         console.log(currStep);
@@ -293,6 +318,10 @@ var mainWindow = {
     },
 
     previousStep: function () {
+
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var currStep = mainWindow.getFromName(mainWindow.steps, mainWindow.currentStepName);
 
         if (currStep.previousStepName === undefined)
@@ -310,6 +339,8 @@ var mainWindow = {
     },
 
     nextImagePage: function () {
+        if (mainWindow.imagePages.length === 0)
+            return;
 
         if (mainWindow.currentImagePage < mainWindow.imagePages.length)
             mainWindow.currentImagePage++;
@@ -319,6 +350,9 @@ var mainWindow = {
     },
 
     previousImagePage: function () {
+
+        if (mainWindow.imagePages.length === 0)
+            return;
 
         if (mainWindow.currentImagePage > 0)
             mainWindow.currentImagePage--;
@@ -333,6 +367,9 @@ var mainWindow = {
     },
 
     display: function (stepName) {
+        if (mainWindow.steps === undefined || mainWindow.steps.length === 0)
+            return;
+
         var html = '<div class="container-fuild">';
         html += '<div class="row" style="margin-right:0px">';
 
@@ -379,12 +416,20 @@ var mainWindow = {
         if (stepData.duration.length > 0)
             html += '<h4 class="card-title">Duration' + stepData.duration + '</h4 >';
 
-        if (stepData.text.length > 0)
-            html += stepData.text.reduce(function (output, item) { return output += '<p class="card-text">' + item + '</p>'; });
+        if (stepData.text.length > 0) {
+            var shrink = stepData.text.length > 8;
+
+            html += stepData.text.reduce(function (output, item) {
+                var o = '<div class="card-text" ';
+                if (shrink)
+                    o += 'style="font-size:50%"';
+
+                return output + o + '>' + item + '</div>';
+            });
+        }
         html += mainWindow.slideInCheckboxes(stepData);
         html += '</div>';
         html += '</div>';
-
 
         return html;
     },
@@ -471,51 +516,31 @@ var mainWindow = {
 
         var checkbox = $('#' + stepData.stepNumber + "_" + checkboxNumber);
         checkbox.prop("checked", !checkbox.prop("checked"));
+    },
+
+    displayError: function (message) {
+
+        var html = '<div class="container-fuild">';
+        html += '<div class="row" style="margin-right:0px">';
+
+        html += '<div class="col">';
+            html += '<div class="card">';
+            html += '<div class="card-body">';
+            html += '<h5 class="card-title alert-danger" >Error</h5 >';
+            html += '<div class="card-text">' + message + '</div>';
+            html += '<div class="card-text">Please say &quotMaestro go home&quot to start over.</div>';
+            html += '</div>';
+            html += '</div>';
+        html += '</div>';
+        html += '</div>';
+     
+            html += '</div>';
+            html += '</div>';
+        console.log(html);
+        $('#mainwindow').html(html);
     }
-
-    /*
-
-
-
-
-
-
-
-    setup: function (role) {
-
-        mainWindow.role = role;
-
-        try {
-
-
-
-            mainWindow.voiceControl.addCommand("maestro next step", mainWindow.nextStep);
-            mainWindow.voiceControl.addCommand("maestro previous step", mainWindow.previousStep);
-
-            mainWindow.voiceControl.start();
-        }
-        catch (e) {
-            console.log(e);
-        }
-        
-
-        mainWindow.render();
-    },
-
-    render: function () {
-        console.log("Rendering step: " + mainWindow.step);
-        $.get(mainWindow.role + "/" + mainWindow.step + ".html", function (data) {
-            $('#mainwindow').html(data);
-        });
-
-
-    },
-
-
-
-
-    */
 };
+
 
 
 
